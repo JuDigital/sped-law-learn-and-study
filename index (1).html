@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPED Law Study</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;1,9..144,600&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#fff6f9;
+  --pink:#e8618f;
+  --pink-deep:#b8346a;
+  --pink-soft:#fde4ed;
+  --pink-line:#f6c4d6;
+  --green:#3d8b67;
+  --green-deep:#2a6a4c;
+  --green-soft:#e2f2e9;
+  --green-line:#b9dfca;
+  --ink:#3b2a32;
+  --muted:#8a7280;
+  --card:#ffffff;
+  --wrong:#d64570;
+  --wrong-soft:#fde0e8;
+  --shadow:0 6px 24px rgba(184,52,106,.10);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--ink);font-family:"Nunito",system-ui,sans-serif;font-size:17px;line-height:1.5}
+body{min-height:100vh;background:
+  radial-gradient(circle at 0% 0%, #fde4ed 0, transparent 40%),
+  radial-gradient(circle at 100% 100%, #e2f2e9 0, transparent 45%), var(--bg)}
+.wrap{max-width:720px;margin:0 auto;padding:20px 16px 60px}
+header{text-align:center;margin:8px 0 18px}
+header h1{font-family:"Fraunces",serif;font-size:2rem;color:var(--pink-deep);letter-spacing:-.01em}
+header h1 em{color:var(--green)}
+header p{color:var(--muted);font-size:.9rem;margin-top:2px}
+.tabs{display:flex;gap:6px;background:#fff;border:2px solid var(--pink-line);border-radius:999px;padding:5px;margin-bottom:16px;box-shadow:var(--shadow)}
+.tab{flex:1;white-space:nowrap;border:0;background:transparent;font:inherit;font-weight:800;color:var(--muted);padding:10px 6px;border-radius:999px;cursor:pointer;font-size:.95rem}
+.tab.on{background:var(--pink);color:#fff}
+.tab .badge{display:inline-block;background:var(--green);color:#fff;border-radius:999px;font-size:.72rem;padding:0 7px;margin-left:4px;vertical-align:1px}
+.tab.on .badge{background:#fff;color:var(--pink-deep)}
+.topicbar{margin-bottom:14px}
+.topicbar label{display:block;font-weight:800;font-size:.8rem;text-transform:uppercase;letter-spacing:.06em;color:var(--green-deep);margin-bottom:4px}
+select{width:100%;font:inherit;font-weight:700;color:var(--ink);background:#fff;border:2px solid var(--green-line);border-radius:14px;padding:10px 12px;appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%233d8b67' stroke-width='3'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center}
+.view{display:none}.view.on{display:block}
+
+/* flashcards */
+.counter{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-weight:700;font-size:.9rem;margin-bottom:8px}
+.flip{perspective:1400px;cursor:pointer;margin-bottom:14px;user-select:none}
+.flip-inner{display:grid;transition:transform .5s;transform-style:preserve-3d}
+.flip.flipped .flip-inner{transform:rotateY(180deg)}
+.face{grid-area:1/1;min-height:330px;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:24px;padding:26px 22px;display:flex;flex-direction:column;box-shadow:var(--shadow)}
+.front{background:var(--card);border:3px solid var(--pink-line);align-items:center;justify-content:center;text-align:center}
+.back{background:var(--card);border:3px solid var(--green-line);transform:rotateY(180deg)}
+.chip{display:inline-block;font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;padding:3px 10px;border-radius:999px}
+.chip.p{background:var(--pink-soft);color:var(--pink-deep)}
+.chip.g{background:var(--green-soft);color:var(--green-deep)}
+.front .term{font-family:"Fraunces",serif;font-size:1.75rem;line-height:1.2;color:var(--ink);margin:14px 0}
+.front .hint{color:var(--muted);font-size:.85rem}
+.back .term-sm{font-weight:800;color:var(--pink-deep);margin:10px 0 6px}
+.back .def{font-size:1.05rem}
+.tip{margin-top:14px;background:var(--green-soft);border-left:5px solid var(--green);border-radius:12px;padding:10px 12px;font-size:.95rem}
+.tip b{color:var(--green-deep)}
+.row{display:flex;gap:8px}
+.btn{flex:1;font:inherit;font-weight:800;border:0;border-radius:16px;padding:14px 10px;cursor:pointer;font-size:1rem;transition:transform .08s}
+.btn:active{transform:scale(.97)}
+.btn.pk{background:var(--pink);color:#fff}
+.btn.gr{background:var(--green);color:#fff}
+.btn.ol{background:#fff;color:var(--pink-deep);border:2px solid var(--pink-line)}
+.btn.olg{background:#fff;color:var(--green-deep);border:2px solid var(--green-line)}
+.btn:disabled{opacity:.45;cursor:default}
+.keys{text-align:center;color:var(--muted);font-size:.8rem;margin-top:12px}
+
+/* quiz */
+.panel{background:#fff;border:3px solid var(--pink-line);border-radius:24px;padding:24px 20px;box-shadow:var(--shadow)}
+.panel h2{font-family:"Fraunces",serif;color:var(--pink-deep);font-size:1.5rem;margin-bottom:6px}
+.panel p{color:var(--muted);margin-bottom:16px}
+.stack{display:flex;flex-direction:column;gap:10px}
+.prog{height:10px;background:var(--pink-soft);border-radius:999px;overflow:hidden;margin-bottom:12px}
+.prog div{height:100%;background:linear-gradient(90deg,var(--pink),var(--green));width:0;transition:width .3s}
+.qtop{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.qnum{font-weight:800;color:var(--muted);font-size:.9rem}
+.qtext{font-size:1.15rem;font-weight:700;margin-bottom:6px}
+.qctx{background:var(--pink-soft);border-radius:14px;padding:12px 14px;margin:8px 0 4px;font-size:1rem}
+.opts{display:flex;flex-direction:column;gap:9px;margin-top:14px}
+.opt{display:flex;gap:12px;align-items:flex-start;text-align:left;font:inherit;background:#fff;border:2px solid var(--pink-line);border-radius:16px;padding:12px 14px;cursor:pointer;color:var(--ink)}
+.opt:hover:not(:disabled){border-color:var(--pink)}
+.opt .l{flex:none;width:28px;height:28px;border-radius:50%;background:var(--pink-soft);color:var(--pink-deep);font-weight:800;display:grid;place-items:center;font-size:.85rem}
+.opt.right{background:var(--green-soft);border-color:var(--green)}
+.opt.right .l{background:var(--green);color:#fff}
+.opt.wrong{background:var(--wrong-soft);border-color:var(--wrong)}
+.opt.wrong .l{background:var(--wrong);color:#fff}
+.opt:disabled{cursor:default}
+.why{display:none;margin-top:14px;border-radius:16px;padding:14px;font-size:.98rem}
+.why.ok{display:block;background:var(--green-soft);border:2px solid var(--green-line)}
+.why.no{display:block;background:var(--wrong-soft);border:2px solid #f3b6c8}
+.why .v{font-weight:800;display:block;margin-bottom:4px}
+.why.ok .v{color:var(--green-deep)}.why.no .v{color:var(--wrong)}
+#nextBtn{margin-top:14px;width:100%;display:none}
+.score{font-family:"Fraunces",serif;font-size:3.2rem;color:var(--green);line-height:1;margin:6px 0}
+.reviewlist{margin-top:18px;display:flex;flex-direction:column;gap:10px}
+.ri{border:2px solid var(--pink-line);border-radius:14px;padding:12px;font-size:.93rem}
+.ri b{display:block;margin-bottom:3px}
+.ri .ans{color:var(--green-deep);font-weight:700}
+.empty{text-align:center;color:var(--muted);padding:20px}
+@media (max-width:420px){.tab{font-size:.85rem;padding:10px 2px}.tab .badge{margin-left:2px;padding:0 5px}}
+footer{text-align:center;color:var(--muted);font-size:.8rem;margin-top:30px}
+@media (min-width:700px){
+  .front .term{font-size:2.1rem}
+  .face{min-height:360px}
+}
+
+/* learn */
+.learn-intro{color:var(--muted);text-align:center;margin-bottom:12px;font-size:.95rem}
+.lesson{background:#fff;border:2px solid var(--pink-line);border-radius:20px;margin-bottom:10px;box-shadow:var(--shadow);overflow:hidden}
+.lesson[open]{border-color:var(--pink)}
+.lesson summary{list-style:none;cursor:pointer;display:flex;gap:12px;align-items:center;padding:14px 16px}
+.lesson summary::-webkit-details-marker{display:none}
+.lesson summary::after{content:"+";margin-left:auto;font-weight:800;font-size:1.4rem;color:var(--pink)}
+.lesson[open] summary::after{content:"−"}
+.lesson summary b{display:block;line-height:1.3}
+.lesson summary small{display:block;color:var(--muted);font-size:.85rem}
+.ln{flex:none;width:34px;height:34px;border-radius:50%;background:var(--green-soft);color:var(--green-deep);font-weight:800;display:grid;place-items:center;font-size:.9rem}
+#L-start .ln,#L-apply .ln{background:var(--pink);color:#fff}
+.lb{padding:4px 16px 18px;border-top:2px dashed var(--pink-line)}
+.lb p{margin:12px 0}
+.lb h5{font-size:1rem;color:var(--pink-deep);margin:18px 0 8px}
+.lb .small{font-size:.88rem;color:var(--muted)}
+.note{background:var(--green-soft);border-left:5px solid var(--green);border-radius:12px;padding:12px 14px;margin:14px 0;font-size:.95rem}
+.trap{background:var(--wrong-soft);border-left:5px solid var(--wrong);border-radius:12px;padding:12px 14px;margin:14px 0;font-size:.95rem}
+.trap b:first-child{color:var(--wrong)}
+ul.plain{padding-left:20px;display:flex;flex-direction:column;gap:5px}
+ul.check{list-style:none;display:flex;flex-direction:column;gap:6px}
+ul.check li{padding-left:28px;position:relative}
+ul.check li::before{content:"✓";position:absolute;left:0;top:0;width:20px;height:20px;border-radius:50%;background:var(--green);color:#fff;font-size:.75rem;display:grid;place-items:center;font-weight:800}
+.flow{list-style:none;counter-reset:f;margin:12px 0;display:flex;flex-direction:column;gap:0}
+.flow li{counter-increment:f;position:relative;padding:8px 0 16px 46px}
+.flow li::before{content:counter(f);position:absolute;left:0;top:6px;width:32px;height:32px;border-radius:50%;background:var(--pink);color:#fff;font-weight:800;display:grid;place-items:center;font-size:.9rem;z-index:1}
+.flow li::after{content:"";position:absolute;left:15px;top:38px;bottom:0;width:2px;background:var(--pink-line)}
+.flow li:last-child::after{display:none}
+.flow li b{display:block}
+.flow li em{font-style:normal;color:var(--green-deep);font-weight:800}
+.flow li span{display:block;color:#5b4651;font-size:.94rem}
+.groups{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0 16px}
+.groups div{background:var(--pink-soft);border-radius:14px;padding:10px;font-size:.9rem}
+.groups b{display:block;color:var(--pink-deep)}
+.timeline{list-style:none;border-left:3px solid var(--pink-line);margin-left:8px;padding-left:18px;display:flex;flex-direction:column;gap:14px}
+.timeline li{position:relative;font-size:.94rem}
+.timeline li::before{content:"";position:absolute;left:-26px;top:4px;width:13px;height:13px;border-radius:50%;background:var(--pink);border:3px solid #fff;box-shadow:0 0 0 2px var(--pink)}
+.timeline li.law::before{background:var(--green);box-shadow:0 0 0 2px var(--green)}
+.timeline .yr{display:inline-block;font-weight:800;font-size:.78rem;background:var(--pink-soft);color:var(--pink-deep);border-radius:999px;padding:1px 9px;margin-bottom:2px}
+.timeline li.law .yr{background:var(--green-soft);color:var(--green-deep)}
+.timeline b{display:block}
+.timeline i{display:block;font-style:normal;color:var(--green-deep);font-weight:700;font-size:.88rem;margin-top:2px}
+.cmp3{display:grid;grid-template-columns:1fr;gap:10px;margin:12px 0}
+.cmp3 .c{border-radius:16px;padding:12px 14px;border:2px solid}
+.cmp3 .pk{border-color:var(--pink-line);background:#fff9fb}
+.cmp3 .gr{border-color:var(--green-line);background:#f6fbf8}
+.cmp3 .pu{border-color:#e3cfe0;background:#fcf8fb}
+.cmp3 h4{font-family:"Fraunces",serif;font-size:1.2rem;color:var(--pink-deep);margin-bottom:6px}
+.cmp3 .gr h4{color:var(--green-deep)}
+.cmp3 dl{display:grid;grid-template-columns:62px 1fr;gap:4px 8px;font-size:.9rem}
+.cmp3 dt{font-weight:800;color:var(--muted);font-size:.78rem;text-transform:uppercase;padding-top:2px}
+.split{display:grid;grid-template-columns:1fr;gap:10px;margin:12px 0}
+.split>div{background:var(--green-soft);border-radius:16px;padding:12px 14px;font-size:.93rem}
+.split>div:first-child{background:var(--pink-soft)}
+.split>div.no{background:var(--wrong-soft)}
+.split b{display:block;font-size:1rem;margin-bottom:4px}
+.split i{display:block;font-style:normal;color:#5b4651;font-size:.88rem;margin-top:6px}
+.split ul{margin-top:4px}
+.cards3{display:grid;grid-template-columns:1fr;gap:8px;margin:12px 0}
+.cards3>div{border:2px solid var(--green-line);border-radius:14px;padding:10px 12px;font-size:.92rem}
+.cards3 b{display:block;color:var(--green-deep)}
+.cards3 i{display:block;font-style:normal;color:var(--muted);font-size:.85rem;margin-top:4px}
+.pyramid{display:flex;flex-direction:column;align-items:center;gap:4px;margin:14px 0}
+.pyramid div{text-align:center;color:#fff;border-radius:12px;padding:10px;font-size:.88rem;line-height:1.35}
+.pyramid b{display:block;font-size:1rem}
+.pyramid .t3{width:50%;background:var(--pink-deep)}
+.pyramid .t2{width:75%;background:var(--pink)}
+.pyramid .t1{width:100%;background:var(--green)}
+.tbl{width:100%;border-collapse:collapse;font-size:.9rem;margin:10px 0}
+.tbl th{background:var(--green);color:#fff;text-align:left;padding:8px}
+.tbl th:first-child{border-top-left-radius:10px}.tbl th:last-child{border-top-right-radius:10px}
+.tbl td{padding:8px;border-bottom:1px solid var(--pink-line);vertical-align:top}
+.tbl td:first-child{font-weight:700;width:40%}
+.prong{display:flex;flex-direction:column;align-items:stretch;gap:4px;margin:10px 0;text-align:center}
+.prong div{background:var(--pink-soft);border-radius:14px;padding:10px;font-size:.95rem}
+.prong div.yes{background:var(--green);color:#fff;font-weight:800}
+.prong span{font-weight:800;color:var(--pink-deep);font-size:1.2rem}
+.acro{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin:12px 0}
+.acro div{background:var(--pink-soft);border-radius:12px;padding:8px 4px;text-align:center;font-size:.85rem}
+.acro b{font-family:"Fraunces",serif;font-size:1.5rem;color:var(--pink-deep);display:inline}
+.acro span{display:block;color:var(--muted);font-size:.75rem;line-height:1.25;margin-top:2px}
+.ladder{display:flex;flex-direction:column;align-items:center;gap:5px;margin:14px 0 4px}
+.ladder div{width:var(--w);background:linear-gradient(90deg,var(--green-soft),var(--pink-soft));border:2px solid var(--green-line);border-radius:12px;padding:8px;text-align:center;font-size:.86rem}
+.ladder div:nth-child(n+4){border-color:var(--pink-line)}
+.ladder b{display:block}
+.ladder-key,.scale-key{display:flex;justify-content:space-between;font-size:.78rem;font-weight:800;color:var(--muted);margin-bottom:8px}
+.scale{display:flex;flex-direction:column;gap:6px;margin:12px 0 4px}
+.scale div{border-radius:12px;padding:10px 12px;font-size:.9rem;border-left:8px solid}
+.scale div:nth-child(1){background:#f3faf6;border-color:#9fd2b5}
+.scale div:nth-child(2){background:#eaf6ef;border-color:var(--green)}
+.scale div:nth-child(3){background:#fdf0f4;border-color:#f19ab9}
+.scale div:nth-child(4){background:#fde4ed;border-color:var(--pink)}
+.scale div:nth-child(5){background:#fbd6e3;border-color:var(--pink-deep)}
+.scale b{display:block}
+.fc{display:flex;flex-direction:column;align-items:stretch;margin:12px 0}
+.fbox{border:2px solid var(--pink-line);border-radius:14px;padding:10px 12px;font-size:.92rem;background:#fff;text-align:center}
+.fbox.soft{background:var(--green-soft);border-color:var(--green-line)}
+.fbox.pk{background:var(--pink-soft);border-color:var(--pink)}
+.fbox.gr{background:var(--green-soft);border-color:var(--green)}
+.farrow{text-align:center;color:var(--pink);line-height:1.4}
+.fsplit{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.special{background:var(--pink-deep);color:#fff;border-radius:16px;padding:12px 14px;margin:12px 0;font-size:.93rem}
+.special>b:first-child{display:block;margin-bottom:4px}
+.cycle{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}
+.cycle div{border-radius:14px;padding:10px 12px;font-size:.88rem;background:var(--green-soft)}
+.cycle div:nth-child(2),.cycle div:nth-child(3){background:var(--pink-soft)}
+.cycle b{display:block}
+.cycle em{display:inline-block;font-style:normal;font-weight:800;font-size:.75rem;background:#fff;border-radius:999px;padding:0 8px;margin:2px 0 4px;color:var(--pink-deep)}
+.nums{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
+.nums div{background:var(--pink-soft);border-radius:14px;padding:10px;font-size:.85rem;line-height:1.3}
+.nums div:nth-child(4n+2),.nums div:nth-child(4n+3){background:var(--green-soft)}
+.nums b{display:block;font-family:"Fraunces",serif;font-size:1.7rem;color:var(--pink-deep);line-height:1.1}
+.nums div:nth-child(4n+2) b,.nums div:nth-child(4n+3) b{color:var(--green-deep)}
+.lesson.hl{animation:hl 1.6s}
+@keyframes hl{0%{box-shadow:0 0 0 6px var(--green)}100%{box-shadow:var(--shadow)}}
+/* explain more on cards */
+.more-btn{margin-top:14px;font:inherit;font-weight:800;background:#fff;color:var(--pink-deep);border:2px solid var(--pink-line);border-radius:12px;padding:9px 12px;cursor:pointer;width:100%}
+.more{display:none;margin-top:10px;font-size:.96rem}
+.more.on{display:block}
+.more .blk{background:var(--pink-soft);border-radius:12px;padding:10px 12px;margin-bottom:8px}
+.more .blk b{display:block;color:var(--pink-deep);font-size:.8rem;text-transform:uppercase;letter-spacing:.05em}
+.lesson-link{display:block;width:100%;font:inherit;font-weight:800;background:var(--green);color:#fff;border:0;border-radius:12px;padding:10px;cursor:pointer;margin-top:4px}
+.why .lesson-link{margin-top:10px}
+@media (min-width:640px){
+  .cmp3{grid-template-columns:repeat(3,1fr)}
+  .split{grid-template-columns:1fr 1fr}
+  .cards3{grid-template-columns:repeat(3,1fr)}
+  .prong{flex-direction:row;align-items:center}
+  .prong div{flex:1}
+  .cycle{grid-template-columns:repeat(4,1fr)}
+  .nums{grid-template-columns:repeat(3,1fr)}
+  .acro{grid-template-columns:repeat(4,1fr)}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>SPED Law <em>Study</em></h1>
+    <p>Special Education Law, Policies, and Procedures</p>
+  </header>
+
+  <nav class="tabs">
+    <button class="tab on" data-v="learn">Learn</button>
+    <button class="tab" data-v="cards">Cards</button>
+    <button class="tab" data-v="quiz">Quiz</button>
+    <button class="tab" data-v="missed">Missed <span class="badge" id="missedBadge">0</span></button>
+  </nav>
+
+  <div class="topicbar">
+    <label for="topic">Topic</label>
+    <select id="topic"></select>
+  </div>
+
+  <!-- LEARN -->
+  <section class="view on" id="v-learn">
+    <p class="learn-intro">Tap a lesson to open it. Each one explains a topic in plain words, with a picture or chart and the test traps to watch for.</p>
+
+    <!-- START HERE -->
+    <details class="lesson" id="L-start" data-k="all">
+      <summary><span class="ln">★</span><span><b>Start here: the special ed process, step by step</b><small>The whole journey on one page</small></span></summary>
+      <div class="lb">
+        <p>Almost every test question fits somewhere on this path. When you read a scenario, ask yourself: <b>what step are we on?</b></p>
+        <ol class="flow">
+          <li><b>Child Find</b><span>The school actively looks for kids who might need help.</span></li>
+          <li><b>MTSS and interventions</b><span>Tier 1, 2, and 3 support with data. This can NOT be used to delay an evaluation.</span></li>
+          <li><b>Referral</b><span>A teacher or parent asks for an evaluation. Bring your intervention data.</span></li>
+          <li><b>Prior Written Notice + Consent</b><span>The school tells parents in writing. Parents agree in writing.</span></li>
+          <li><b>Evaluation <em>(60 days)</em></b><span>Full and fair. Many tools, the right language, no single test.</span></li>
+          <li><b>Eligibility</b><span>Has one of the 13 disabilities AND needs special ed? Both must be yes.</span></li>
+          <li><b>IEP meeting <em>(within 30 days)</em></b><span>The team, including parents, writes goals, services, and placement (LRE).</span></li>
+          <li><b>Consent for services</b><span>Parents agree before services start. This is separate from consent to evaluate.</span></li>
+          <li><b>Services + progress monitoring</b><span>Teach, collect data, and report progress to parents.</span></li>
+          <li><b>Annual review <em>(every year)</em></b><span>Check progress and write new goals.</span></li>
+          <li><b>Reevaluation <em>(every 3 years)</em></b><span>Does the student still qualify? What do they need now?</span></li>
+          <li><b>Transition <em>(by age 16)</em> then graduation</b><span>IDEA ends. Section 504 and the ADA keep protecting them as adults.</span></li>
+        </ol>
+        <div class="note">If parents disagree at <b>any</b> step: they can request an IEE, mediation, a state complaint, or a due process hearing. The student <b>stays put</b> in their current placement while it's settled.</div>
+      </div>
+    </details>
+
+    <!-- COURT CASES -->
+    <details class="lesson" id="L-cases" data-k="law">
+      <summary><span class="ln">1</span><span><b>Court cases and laws timeline</b><small>Who, when, and why it matters</small></span></summary>
+      <div class="lb">
+        <p>Don't memorize these as a list. Learn them in <b>4 groups</b> by the problem each one solved:</p>
+        <div class="groups">
+          <div><b>Getting in the door</b>Brown, PARC, Mills</div>
+          <div><b>Fair testing</b>Diana, Larry P.</div>
+          <div><b>How good must it be?</b>Rowley, Endrew F.</div>
+          <div><b>Discipline</b>Honig v. Doe</div>
+        </div>
+        <ul class="timeline">
+          <li><span class="yr">1954</span><b>Brown v. Board of Education</b>Ended racial segregation in schools. Not a disability case, but it set the idea that separate is not equal.<i>Hook: the foundation everything else builds on.</i></li>
+          <li><span class="yr">1970</span><b>Diana v. State Board of Education</b>A Spanish speaking student was labeled with an intellectual disability after an English IQ test. Students must be tested in their primary language.<i>Hook: Diana = language.</i></li>
+          <li><span class="yr">1972</span><b>PARC v. Pennsylvania</b>Children with intellectual disabilities can't be turned away from public school.<i>Hook: PARC opened the door.</i></li>
+          <li><span class="yr">1972</span><b>Mills v. Board of Education of D.C.</b>Children with behavior and emotional needs can't be excluded, and lack of money is no excuse.<i>Hook: Mills = Money is no excuse.</i></li>
+          <li><span class="yr">1972</span><b>Larry P. v. Riles</b>IQ tests placed too many Black students in special ed in California. The court called it biased and discriminatory.<i>Hook: Larry P. = racial bias in IQ tests.</i></li>
+          <li class="law"><span class="yr">1973</span><b>Section 504 passes</b>Part of the Rehabilitation Act. Bans disability discrimination in programs that get federal money.</li>
+          <li class="law"><span class="yr">1975</span><b>EHA passes (P.L. 94-142)</b>The Education for All Handicapped Children Act turned PARC and Mills into national law. It's the law we now call IDEA.</li>
+          <li><span class="yr">1982</span><b>Board of Education v. Rowley</b>First Supreme Court case on FAPE. Schools must give educational benefit, not the best possible education.<i>Hook: Rowley = the floor.</i></li>
+          <li><span class="yr">1988</span><b>Honig v. Doe</b>Schools can't remove students with disabilities indefinitely for behavior.<i>Hook: Honig = you can't kick them out for good.</i></li>
+          <li class="law"><span class="yr">1990</span><b>ADA passes, EHA renamed IDEA</b>Civil rights for people with disabilities across daily life. “Person first” name: Individuals with Disabilities Education Act.</li>
+          <li class="law"><span class="yr">2004</span><b>IDEA reauthorized</b>States can't require the IQ discrepancy model for learning disabilities and must allow RTI (response to intervention).</li>
+          <li><span class="yr">2017</span><b>Endrew F. v. Douglas County</b>Raised the bar. Goals must be appropriately ambitious, with meaningful progress.<i>Hook: Endrew = Expectations raised.</i></li>
+        </ul>
+      </div>
+    </details>
+
+    <!-- LAWS -->
+    <details class="lesson" id="L-laws" data-k="law">
+      <summary><span class="ln">2</span><span><b>IDEA vs. Section 504 vs. ADA</b><small>The three laws side by side</small></span></summary>
+      <div class="lb">
+        <p><b>The quick test:</b> Does the student need the <b>teaching changed</b>? That's IDEA. Do they just need <b>barriers removed</b> to access the same teaching? That's 504.</p>
+        <div class="cmp3">
+          <div class="c pk"><h4>IDEA</h4>
+            <dl><dt>Type</dt><dd>Education law (funds special ed)</dd>
+            <dt>Who</dt><dd>Ages 3 to 21. One of 13 categories AND needs special ed</dd>
+            <dt>Plan</dt><dd>IEP</dd>
+            <dt>Gives</dt><dd>Specially designed instruction + related services</dd>
+            <dt>Ends</dt><dd>At graduation with a regular diploma, or aging out at 21</dd></dl></div>
+          <div class="c gr"><h4>Section 504</h4>
+            <dl><dt>Type</dt><dd>Civil rights law</dd>
+            <dt>Who</dt><dd>Any disability that substantially limits a major life activity</dd>
+            <dt>Plan</dt><dd>504 plan</dd>
+            <dt>Gives</dt><dd>Accommodations for equal access</dd>
+            <dt>Ends</dt><dd>Never. Covers colleges and jobs that get federal money</dd></dl></div>
+          <div class="c pu"><h4>ADA</h4>
+            <dl><dt>Type</dt><dd>Civil rights law</dd>
+            <dt>Who</dt><dd>Same definition of disability as 504</dd>
+            <dt>Plan</dt><dd>No school plan</dd>
+            <dt>Gives</dt><dd>Equal access in jobs, public places, transportation, services</dd>
+            <dt>Ends</dt><dd>Never. Covers public AND private places</dd></dl></div>
+        </div>
+        <div class="trap"><b>Test trap:</b> Every student with an IEP is also protected by 504. But a student with a 504 plan does not automatically qualify for an IEP.</div>
+        <h5>The 6 big principles of IDEA</h5>
+        <ul class="plain">
+          <li><b>Zero reject:</b> no child with a disability is turned away.</li>
+          <li><b>Nondiscriminatory evaluation:</b> fair testing, many tools, right language.</li>
+          <li><b>FAPE:</b> the right education, at no cost, through an IEP.</li>
+          <li><b>LRE:</b> with general ed peers as much as appropriate.</li>
+          <li><b>Parent participation:</b> parents are equal team members.</li>
+          <li><b>Procedural safeguards:</b> parents' rights and ways to settle disagreements.</li>
+        </ul>
+        <h5>Accommodation vs. modification</h5>
+        <div class="split">
+          <div><b>Accommodation</b>Changes <u>how</u> the student learns or shows learning. Same expectations.<i>Extra time, audiobook, preferential seating.</i></div>
+          <div><b>Modification</b>Changes <u>what</u> the student is expected to learn. Different expectations.<i>Fewer answer choices, shorter test, easier reading level.</i></div>
+        </div>
+      </div>
+    </details>
+
+    <!-- MTSS -->
+    <details class="lesson" id="L-mtss" data-k="child">
+      <summary><span class="ln">3</span><span><b>Child Find and MTSS</b><small>Finding kids and giving help before referral</small></span></summary>
+      <div class="lb">
+        <p><b>Child Find</b> means schools must go looking for kids who might have disabilities. That includes private school, homeschooled, homeless, and highly mobile children, from birth to 21.</p>
+        <p><b>MTSS</b> is the system of support the school uses for everyone. Think of it as a pyramid:</p>
+        <div class="pyramid">
+          <div class="t3"><b>Tier 3</b>Few students. Intensive, individual help.</div>
+          <div class="t2"><b>Tier 2</b>Some students. Small group, targeted help.</div>
+          <div class="t1"><b>Tier 1</b>All students. Strong core teaching in general ed.</div>
+        </div>
+        <div class="trap"><b>Test trap:</b> MTSS can NOT be used to delay or deny an evaluation. If a parent asks for an evaluation, the school must either ask for consent to evaluate or send Prior Written Notice saying no and why.</div>
+        <h5>Before you refer, document:</h5>
+        <ul class="plain">
+          <li>Which interventions you tried</li>
+          <li>How often and for how long</li>
+          <li>Progress monitoring data (graphs)</li>
+          <li>Work samples and observations</li>
+          <li>Parent input</li>
+        </ul>
+        <h5>Two questions to ask yourself first</h5>
+        <ul class="plain">
+          <li><b>Opportunity to Learn:</b> Did this student actually get good teaching and enough time?</li>
+          <li><b>Disproportionality:</b> Am I referring this student because of a real need, or because of race, culture, or language?</li>
+        </ul>
+      </div>
+    </details>
+
+    <!-- CONSENT -->
+    <details class="lesson" id="L-consent" data-k="eval">
+      <summary><span class="ln">4</span><span><b>Prior Written Notice vs. Consent</b><small>Who tells, who agrees, and when</small></span></summary>
+      <div class="lb">
+        <div class="split">
+          <div><b>Prior Written Notice</b>School ➜ Parent. <u>The school informs.</u><br>Required when the school <b>proposes OR refuses</b> to start or change identification, evaluation, placement, or FAPE.<i>Must explain: what, why, what data was used, other options considered, and parent rights.</i></div>
+          <div><b>Informed Consent</b>Parent ➜ School. <u>The parent agrees.</u><br>In writing, voluntary, in the parent's native language, and can be taken back.<i>Needed before the initial evaluation, before services start, and before reevaluations.</i></div>
+        </div>
+        <h5>What if the parent says no?</h5>
+        <table class="tbl">
+          <tr><th>Parent refuses...</th><th>What happens</th></tr>
+          <tr><td>Initial evaluation</td><td>The school <b>may</b> use mediation or due process to try to override. It doesn't have to.</td></tr>
+          <tr><td>Initial services</td><td>The school <b>cannot</b> override. No services start, and the school is not blamed for denying FAPE.</td></tr>
+          <tr><td>Revokes consent later</td><td>The school sends PWN and stops services.</td></tr>
+        </table>
+        <div class="trap"><b>Test trap:</b> Consent to evaluate is NOT consent for services. They are two separate signatures.</div>
+      </div>
+    </details>
+
+    <!-- EVALUATION -->
+    <details class="lesson" id="L-eval" data-k="eval">
+      <summary><span class="ln">5</span><span><b>Fair evaluation and eligibility</b><small>How the team decides who qualifies</small></span></summary>
+      <div class="lb">
+        <h5>Rules for a fair evaluation</h5>
+        <ul class="plain">
+          <li>Use a <b>variety</b> of tools. <b>No single test</b> can decide anything.</li>
+          <li>Test in the student's <b>native language</b> (Diana).</li>
+          <li>Tests must not be racially or culturally biased (Larry P.).</li>
+          <li>Done by <b>trained</b> professionals.</li>
+          <li>Look at <b>all areas</b> of suspected disability.</li>
+        </ul>
+        <h5>Eligibility has two parts. Both must be yes.</h5>
+        <div class="prong">
+          <div>Has a disability in one of the <b>13 categories</b></div>
+          <span>+</span>
+          <div><b>Needs special education</b> because of it</div>
+          <span>=</span>
+          <div class="yes">Eligible under IDEA</div>
+        </div>
+        <p class="small"><b>The 13 categories:</b> autism, deaf blindness, deafness, emotional disturbance, hearing impairment, intellectual disability, multiple disabilities, orthopedic impairment, other health impairment (often ADHD), specific learning disability, speech or language impairment, traumatic brain injury, visual impairment.</p>
+        <div class="trap"><b>Test trap:</b> A diagnosis alone does NOT make a student eligible. A student with autism who is thriving and doesn't need specialized instruction may get a 504 plan instead.</div>
+        <h5>Exclusionary factors: NOT a disability</h5>
+        <p>If the struggle is mainly caused by one of these, the student does not qualify: poverty, trauma, learning English, lots of absences, being unhoused, or lack of good instruction.</p>
+        <h5>Who's who on the evaluation team</h5>
+        <table class="tbl">
+          <tr><th>Person</th><th>Looks at</th></tr>
+          <tr><td>School psychologist</td><td>Thinking skills, IQ, academic testing</td></tr>
+          <tr><td>Speech Language Pathologist</td><td>Talking, sounds, understanding language</td></tr>
+          <tr><td>Occupational Therapist</td><td>Small muscles (handwriting, scissors), sensory, daily living</td></tr>
+          <tr><td>Physical Therapist</td><td>Big muscles (walking, balance, stairs)</td></tr>
+          <tr><td>Social worker or counselor</td><td>Emotions, family, home environment</td></tr>
+          <tr><td>Teacher</td><td>Classroom performance and intervention data</td></tr>
+          <tr><td>Parent</td><td>Home life, history, what they see</td></tr>
+        </table>
+      </div>
+    </details>
+
+    <!-- SLD -->
+    <details class="lesson" id="L-sld" data-k="eval">
+      <summary><span class="ln">6</span><span><b>Specific Learning Disability (SLD)</b><small>The 3 ways it gets identified</small></span></summary>
+      <div class="lb">
+        <p><b>SLD in plain words:</b> a brain based problem with processing language that shows up in reading, writing, spelling, listening, or math, even though the student is otherwise capable. It's the largest IDEA category.</p>
+        <div class="cards3">
+          <div><b>1. IQ Achievement Discrepancy</b>Compare IQ to achievement. A big gap suggests SLD.<i>Problem: kids have to fall far behind first (“wait to fail”).</i></div>
+          <div><b>2. Response to Intervention (RTI)</b>Did the student respond to good, research based teaching? If not, that points to SLD.<i>Ties directly to MTSS data.</i></div>
+          <div><b>3. Convergence of Data</b>Many sources (tests, teachers, parents, observations) all point the same way.<i>The strongest, fairest decision.</i></div>
+        </div>
+        <div class="trap"><b>Test trap:</b> Since IDEA 2004, states can NOT require the discrepancy model and MUST allow RTI.</div>
+      </div>
+    </details>
+
+    <!-- IEE -->
+    <details class="lesson" id="L-iee" data-k="eval">
+      <summary><span class="ln">7</span><span><b>When parents disagree with the evaluation: IEE</b><small>The second opinion right</small></span></summary>
+      <div class="lb">
+        <ol class="flow">
+          <li><b>Parent disagrees</b><span>with the school's evaluation and asks for an IEE at public expense.</span></li>
+          <li><b>School must choose one, without delay:</b><span>Pay for the IEE, OR file for due process to prove its own evaluation was appropriate.</span></li>
+          <li><b>If the school wins</b><span>Parents can still get an IEE, but they pay for it.</span></li>
+          <li><b>Results come back</b><span>The team must <u>consider</u> the IEE results. It doesn't have to follow them.</span></li>
+        </ol>
+        <div class="trap"><b>Test trap:</b> The IEE examiner can NOT work for the district. That's the whole point: independent.</div>
+      </div>
+    </details>
+
+    <!-- FAPE -->
+    <details class="lesson" id="L-fape" data-k="fape">
+      <summary><span class="ln">8</span><span><b>FAPE: Rowley vs. Endrew F.</b><small>How good does special ed have to be?</small></span></summary>
+      <div class="lb">
+        <div class="acro">
+          <div><b>F</b>ree<span>No cost to parents</span></div>
+          <div><b>A</b>ppropriate<span>Fits this student</span></div>
+          <div><b>P</b>ublic<span>Provided by the public school</span></div>
+          <div><b>E</b>ducation<span>Special ed + related services</span></div>
+        </div>
+        <div class="split">
+          <div><b>Rowley (1982)</b><u>The student:</u> Amy, deaf, passing with a hearing aid and tutoring. Parents wanted an interpreter.<br><u>The ruling:</u> No interpreter needed. She was already benefiting.<br><u>The standard:</u> “Some educational benefit.” Schools don't have to maximize potential.<i>Rowley set the floor.</i></div>
+          <div><b>Endrew F. (2017)</b><u>The student:</u> Endrew, autism, same goals year after year with almost no progress.<br><u>The ruling:</u> That's not enough.<br><u>The standard:</u> IEPs must be “appropriately ambitious” and allow meaningful progress in light of the child's circumstances.<i>Endrew raised the floor.</i></div>
+        </div>
+        <div class="note"><b>Picture it:</b> Rowley says the school must give the student a car that runs. Endrew says the car has to actually get <u>this</u> student somewhere meaningful.</div>
+        <div class="trap"><b>Test trap:</b> Endrew did NOT overturn Rowley. It built on it. Neither case requires the “best possible” education.</div>
+        <h5>When FAPE is denied, remedies include:</h5>
+        <ul class="plain">
+          <li><b>Compensatory education:</b> make up services for what was missed.</li>
+          <li><b>Private school tuition reimbursement:</b> if the district failed to offer FAPE and the parents placed the child privately.</li>
+        </ul>
+      </div>
+    </details>
+
+    <!-- LRE -->
+    <details class="lesson" id="L-lre" data-k="fape">
+      <summary><span class="ln">9</span><span><b>LRE and the continuum of placements</b><small>Where the student learns</small></span></summary>
+      <div class="lb">
+        <p><b>LRE in plain words:</b> start in general ed. Only move the student out when general ed doesn't work, even with supports and aids.</p>
+        <div class="ladder">
+          <div style="--w:100%"><b>General ed full time</b> with accommodations and supports</div>
+          <div style="--w:90%"><b>General ed + resource room</b> part of the day</div>
+          <div style="--w:78%"><b>Self-contained class</b> in a regular school</div>
+          <div style="--w:66%"><b>Separate special school or day treatment</b></div>
+          <div style="--w:54%"><b>Residential placement</b></div>
+          <div style="--w:42%"><b>Home or hospital</b></div>
+        </div>
+        <div class="ladder-key"><span>▲ Least restrictive (most included)</span><span>▼ Most restrictive</span></div>
+        <h5>Placement rules</h5>
+        <ul class="plain">
+          <li>Decided by the IEP team, <b>including parents</b>.</li>
+          <li>Based on the student's <b>IEP and needs</b>.</li>
+          <li><b>NOT</b> based on the disability label, available space, cost, or convenience.</li>
+          <li>Reviewed at least once a year.</li>
+        </ul>
+        <div class="trap"><b>Test trap:</b> LRE does NOT mean every student must be in general ed full time. It means as much as is <u>appropriate</u> for that student.</div>
+      </div>
+    </details>
+
+    <!-- IEP -->
+    <details class="lesson" id="L-iep" data-k="iep">
+      <summary><span class="ln">10</span><span><b>What's in an IEP and who's on the team</b><small>The parts and the people</small></span></summary>
+      <div class="lb">
+        <h5>What the IEP must include</h5>
+        <ul class="check">
+          <li><b>PLAAFP:</b> where the student is now and how the disability affects learning</li>
+          <li><b>Measurable annual goals</b> built from the PLAAFP</li>
+          <li><b>How progress will be measured</b> and when parents get reports</li>
+          <li><b>Services:</b> special ed, related services, aids, and supports</li>
+          <li><b>LRE explanation:</b> how much time, if any, away from general ed peers and why</li>
+          <li><b>State and district tests:</b> with what accommodations, or an alternate test</li>
+          <li><b>When, where, how often, and how long</b> services happen</li>
+          <li><b>Transition plan</b> by age 16</li>
+        </ul>
+        <div class="note"><b>How PLAAFP becomes a goal:</b><br>PLAAFP: “Jada reads 45 words per minute. Grade level is 90.”<br>Goal: “By May, Jada will read 80 words per minute with 95% accuracy.”</div>
+        <h5>Required team members</h5>
+        <ul class="check">
+          <li>Parents</li>
+          <li>At least one general ed teacher</li>
+          <li>At least one special ed teacher</li>
+          <li>District representative (LEA) who can commit resources</li>
+          <li>Someone who can explain evaluation results</li>
+          <li>The student, when appropriate (must be invited for transition)</li>
+          <li>Others the parent or school invite, like related service providers</li>
+        </ul>
+        <div class="trap"><b>Test trap:</b> Writing the IEP ahead of time and presenting it as final is <b>predetermination</b>. It violates parent participation. Drafts are fine if the team truly discusses and can change them.</div>
+      </div>
+    </details>
+
+    <!-- DISPUTES -->
+    <details class="lesson" id="L-disputes" data-k="iep">
+      <summary><span class="ln">11</span><span><b>When parents and schools disagree</b><small>From least formal to most formal</small></span></summary>
+      <div class="lb">
+        <div class="scale">
+          <div><b>1. Talk it out</b>Call another IEP meeting.</div>
+          <div><b>2. Mediation</b>A neutral mediator helps both sides agree. Voluntary, free, confidential.</div>
+          <div><b>3. State complaint</b>The state education agency investigates whether the law was broken. File within 1 year.</div>
+          <div><b>4. Due process hearing</b>Like a mini court. An impartial hearing officer decides. File within 2 years. A resolution meeting comes first (within 15 days).</div>
+          <div><b>5. Court</b>Either side can appeal the hearing decision to state or federal court.</div>
+        </div>
+        <div class="scale-key"><span>Least formal</span><span>Most formal</span></div>
+        <div class="note"><b>Stay put:</b> during any dispute, the student stays in their current placement until it's resolved.</div>
+        <div class="trap"><b>Test trap:</b> Mediation can NOT be used to delay a parent's right to a due process hearing.</div>
+      </div>
+    </details>
+
+    <!-- DISCIPLINE -->
+    <details class="lesson" id="L-disc" data-k="disc">
+      <summary><span class="ln">12</span><span><b>Discipline and the 10 day rule</b><small>The flowchart that answers most discipline questions</small></span></summary>
+      <div class="lb">
+        <p>Background: <b>Honig v. Doe</b> said schools can't remove students with disabilities forever for behavior. These rules came from that.</p>
+        <div class="fc">
+          <div class="fbox">Student with an IEP breaks the code of conduct</div>
+          <div class="farrow">▼</div>
+          <div class="fbox soft"><b>Up to 10 school days:</b> the school can remove the student like any other student.</div>
+          <div class="farrow">▼</div>
+          <div class="fbox"><b>More than 10 days?</b> That's a change in placement. Services must continue starting day 11.</div>
+          <div class="farrow">▼</div>
+          <div class="fbox pk"><b>Manifestation determination</b> within 10 school days.<br>1. Was the behavior caused by the disability?<br>2. Was it because the school didn't follow the IEP?</div>
+          <div class="fsplit">
+            <div class="fbox gr"><b>YES to either</b><br>Student returns to their placement. Do an FBA and write (or fix) a behavior plan (BIP).</div>
+            <div class="fbox"><b>NO to both</b><br>Normal discipline like any student, BUT educational services continue.</div>
+          </div>
+        </div>
+        <div class="special"><b>Special circumstances: weapons, illegal drugs, or serious bodily injury</b>The school can place the student in an <b>IAES for up to 45 school days</b>, even if the behavior WAS a manifestation.</div>
+        <div class="trap"><b>Test trap:</b> Services never stop after 10 days, no matter what the manifestation team decides.</div>
+      </div>
+    </details>
+
+    <!-- CYCLE -->
+    <details class="lesson" id="L-cycle" data-k="disc">
+      <summary><span class="ln">13</span><span><b>Keeping the IEP current</b><small>Progress, reviews, reevaluations, transition</small></span></summary>
+      <div class="lb">
+        <div class="cycle">
+          <div><b>Progress monitoring</b><em>Ongoing</em>Collect data on goals. Report to parents at least as often as report cards.</div>
+          <div><b>Annual review</b><em>Every year</em>Review progress, write new goals, review placement.</div>
+          <div><b>Reevaluation</b><em>Every 3 years</em>Still eligible? What's needed now? Not more than once a year unless both agree. Can be skipped only if both agree.</div>
+          <div><b>Transition plan</b><em>By age 16</em>Plan for life after high school.</div>
+        </div>
+        <h5>What goes in a transition plan</h5>
+        <ul class="plain">
+          <li>Measurable goals for after high school: <b>education or training, employment, and independent living</b> (when appropriate)</li>
+          <li>Transition services and courses to reach those goals</li>
+          <li>The student must be invited to the meeting</li>
+          <li>Parents and student are told about rights transferring to the student at the age of majority (18 in most states), at least one year before</li>
+        </ul>
+        <div class="trap"><b>Test trap:</b> After graduation, IDEA ends. The student is protected by <b>Section 504 and the ADA</b>, but no one comes looking for them. The adult has to ask for accommodations.</div>
+      </div>
+    </details>
+
+    <!-- ETHICS -->
+    <details class="lesson" id="L-ethics" data-k="ethics">
+      <summary><span class="ln">14</span><span><b>CEC ethics: the 12 principles in real life</b><small>Match the scenario to the principle</small></span></summary>
+      <div class="lb">
+        <p>The test gives a situation and asks which principle applies, or what an ethical teacher should do. Learn what each one <b>looks like</b>.</p>
+        <table class="tbl">
+          <tr><th>Principle</th><th>Looks like</th></tr>
+          <tr><td>1. Challenging expectations</td><td>Believing the student can grow. Never “he can't because of his disability.”</td></tr>
+          <tr><td>2. Competence and integrity</td><td>Being skilled, honest, and using good judgment.</td></tr>
+          <tr><td>3. Inclusive participation</td><td>Getting students involved in school and community life.</td></tr>
+          <tr><td>4. Work well with colleagues</td><td>Collaborating with gen ed teachers, paras, and therapists.</td></tr>
+          <tr><td>5. Respectful family partnerships</td><td>Asking parents for their goals. Respecting culture. Involving them in decisions.</td></tr>
+          <tr><td>6. Use evidence and data</td><td>Choosing interventions based on research and student data.</td></tr>
+          <tr><td>7. Protect safety</td><td>Keeping students physically and emotionally safe.</td></tr>
+          <tr><td>8. Never do or tolerate harm</td><td>Reporting a colleague who restrains a student inappropriately.</td></tr>
+          <tr><td>9. Follow and improve laws</td><td>Following IDEA and policy, and pushing to improve them.</td></tr>
+          <tr><td>10. Advocate for resources</td><td>Telling admin the students aren't getting their IEP services.</td></tr>
+          <tr><td>11. Professional organizations</td><td>Joining and taking part in groups like CEC.</td></tr>
+          <tr><td>12. Grow and share knowledge</td><td>Taking trainings (growth) and teaching others (dissemination).</td></tr>
+        </table>
+        <h5>Section 2 terms that look alike</h5>
+        <div class="cards3">
+          <div><b>Competence</b>Being good at the job <u>now</u>.<i>Knows how to write a solid behavior plan.</i></div>
+          <div><b>Growth</b><u>Learning</u> more.<i>Takes a workshop on autism strategies.</i></div>
+          <div><b>Dissemination</b><u>Sharing</u> what you know.<i>Presents strategies at a staff meeting.</i></div>
+          <div><b>Dispositions</b>Your <u>attitudes and habits</u>.<i>Patient, respectful, believes all kids can learn.</i></div>
+          <div><b>Responsibilities</b>Being a <u>model professional</u> in school and community.<i>Acts with integrity in and out of school.</i></div>
+          <div><b>Confidentiality</b>Student info stays <u>private</u> (FERPA).<i>Never discusses students in public.</i></div>
+        </div>
+      </div>
+    </details>
+
+    <!-- APPLY -->
+    <details class="lesson" id="L-apply" data-k="all">
+      <summary><span class="ln">15</span><span><b>How to answer scenario questions</b><small>A method for Section 3 style questions</small></span></summary>
+      <div class="lb">
+        <ol class="flow">
+          <li><b>Who is the student?</b><span>IEP (IDEA) or 504? Which step of the process are they on?</span></li>
+          <li><b>What right is at stake?</b><span>Evaluation, consent, FAPE, LRE, discipline, parent participation, confidentiality?</span></li>
+          <li><b>What does the law require?</b><span>Think timelines, notices, consent, stay put, the 10 day rule.</span></li>
+          <li><b>What would an ethical teacher do?</b><span>Follow the law, include parents, use data, advocate, protect the student.</span></li>
+        </ol>
+        <div class="split">
+          <div><b>Usually the RIGHT answer</b>
+            <ul class="plain"><li>Follows the IEP and the law</li><li>Includes parents</li><li>Uses data and multiple sources</li><li>Keeps the student as included as appropriate</li><li>Protects confidentiality</li><li>Documents and reports concerns</li></ul></div>
+          <div class="no"><b>Usually the WRONG answer</b>
+            <ul class="plain"><li>Delays or waits</li><li>Leaves parents out</li><li>Uses one test score</li><li>Uses money or staffing as an excuse</li><li>Bases placement on a label</li><li>Ignores a problem to keep the peace</li></ul></div>
+        </div>
+      </div>
+    </details>
+
+    <!-- NUMBERS -->
+    <details class="lesson" id="L-nums" data-k="nums">
+      <summary><span class="ln">16</span><span><b>Numbers cheat sheet</b><small>Every timeline on one screen</small></span></summary>
+      <div class="lb">
+        <div class="nums">
+          <div><b>60</b>days to finish the initial evaluation after consent</div>
+          <div><b>30</b>days to hold the IEP meeting after eligibility</div>
+          <div><b>1</b>year: annual review</div>
+          <div><b>3</b>years: reevaluation</div>
+          <div><b>10</b>school days of removal before protections kick in</div>
+          <div><b>10</b>school days to hold the manifestation determination</div>
+          <div><b>45</b>school days max in an IAES</div>
+          <div><b>16</b>age the transition plan must be in place</div>
+          <div><b>3 to 21</b>ages covered by IDEA</div>
+          <div><b>13</b>IDEA disability categories</div>
+          <div><b>15</b>days to hold a resolution meeting after due process filing</div>
+          <div><b>2 / 1</b>years to file due process / a state complaint</div>
+        </div>
+        <p class="small">Texas sets its own evaluation timeline (45 school days) and starts transition at 14. For the WGU test, use the federal numbers above.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- FLASHCARDS -->
+  <section class="view" id="v-cards">
+    <div class="counter"><span id="cCount">1 / 1</span><span id="cTopic" class="chip g"></span></div>
+    <div class="flip" id="flip">
+      <div class="flip-inner">
+        <div class="face front">
+          <div class="term" id="cTerm"></div>
+          <div class="hint">Tap to flip</div>
+        </div>
+        <div class="face back">
+          <span class="chip p" style="align-self:flex-start">Answer</span>
+          <div class="term-sm" id="cTerm2"></div>
+          <div class="def" id="cDef"></div>
+          <div class="tip" id="cTip"></div>
+          <button class="more-btn" id="moreBtn">Explain it more ▾</button>
+          <div class="more" id="cMore"></div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <button class="btn ol" id="prevBtn">Back</button>
+      <button class="btn pk" id="flipBtn">Flip</button>
+      <button class="btn gr" id="nextCard">Next</button>
+    </div>
+    <div class="row" style="margin-top:8px">
+      <button class="btn olg" id="shuffleBtn">Shuffle cards</button>
+    </div>
+    <div class="keys">Laptop: Space to flip, arrow keys to move</div>
+  </section>
+
+  <!-- QUIZ -->
+  <section class="view" id="v-quiz">
+    <div id="qStart" class="panel">
+      <h2>Ready to quiz?</h2>
+      <p>20 mixed questions: multiple choice, true or false, and real classroom scenarios. You see the answer and why right after each one.</p>
+      <div class="stack">
+        <button class="btn pk" id="startBtn">Start 20 questions</button>
+        <button class="btn olg" id="startMissed">Practice my missed questions</button>
+      </div>
+    </div>
+
+    <div id="qRun" style="display:none">
+      <div class="prog"><div id="progBar"></div></div>
+      <div class="panel">
+        <div class="qtop"><span class="qnum" id="qNum"></span><span class="chip g" id="qType"></span></div>
+        <div class="qtext" id="qText"></div>
+        <div class="qctx" id="qCtx" style="display:none"></div>
+        <div class="opts" id="qOpts"></div>
+        <div class="why" id="qWhy"></div>
+        <button class="btn pk" id="nextBtn">Next question</button>
+      </div>
+      <div class="keys">Laptop: press 1 to 4 to answer, Enter for next</div>
+    </div>
+
+    <div id="qEnd" class="panel" style="display:none">
+      <h2 id="endTitle"></h2>
+      <div class="score" id="endScore"></div>
+      <p id="endMsg"></p>
+      <div class="stack">
+        <button class="btn pk" id="againBtn">New round</button>
+        <button class="btn olg" id="endMissed">Practice my missed questions</button>
+      </div>
+      <div class="reviewlist" id="endReview"></div>
+    </div>
+  </section>
+
+  <!-- MISSED -->
+  <section class="view" id="v-missed">
+    <div class="panel">
+      <h2>Your missed questions</h2>
+      <p>Anything you get wrong lands here. Answer it right later and it disappears. Saved on this device.</p>
+      <div class="stack">
+        <button class="btn pk" id="missedGo">Practice missed questions</button>
+        <button class="btn ol" id="missedClear">Clear list</button>
+      </div>
+      <div class="reviewlist" id="missedList"></div>
+    </div>
+  </section>
+
+  <footer>You've got this. One card at a time. 💗</footer>
+</div>
+
+<script>
+const TOPICS = {
+  all:"All topics",
+  law:"Laws and Court Cases",
+  child:"Child Find and MTSS",
+  eval:"Evaluation and Eligibility",
+  fape:"FAPE and LRE",
+  iep:"IEP and Disputes",
+  disc:"Discipline and Reviews",
+  ethics:"Ethics and CEC",
+  nums:"Numbers to Know"
+};
+
+/* ---------- FLASHCARDS ---------- */
+const CARDS = [
+/* Laws and court cases */
+{k:"law",t:"Brown v. Board of Education (1954)",d:"Supreme Court ruled that racially segregated schools are unconstitutional. “Separate but equal” violates the Equal Protection Clause of the 14th Amendment.",tip:"A race case, not a disability case. It is the civil rights foundation that later special ed cases built on.",p:"Schools can't separate kids by race. Equal means together, not separate.",ex:"Before Brown, Black and white children went to separate schools by law. After Brown, that became illegal. Disability advocates later used the same argument: kids with disabilities can't be shut out either."},
+{k:"law",t:"PARC v. Pennsylvania (1972)",d:"Children with intellectual disabilities cannot be denied public school. They have equal protection and due process rights and are entitled to a free public education.",tip:"PARC = intellectual disabilities get in the door.",p:"Kids with intellectual disabilities have the right to attend public school for free.",ex:"Before PARC, Pennsylvania could label a child “uneducable” and turn the family away. After PARC, the state had to educate that child."},
+{k:"law",t:"Mills v. Board of Education of D.C. (1972)",d:"Children with emotional disturbance and behavior challenges cannot be excluded from school. Lack of funds is not an excuse for failing to educate them.",tip:"Mills = Money is no excuse. Also covers behavior.",p:"Schools can't turn away kids with behavior or emotional needs, and they can't blame the budget.",ex:"A district says, “We don't have money for a behavior program, so he can't enroll.” Mills says that is illegal. The district has to find a way."},
+{k:"law",t:"Diana v. State Board of Education (1970)",d:"Students must be tested in their primary language so a language barrier is not mistaken for an intellectual disability.",tip:"Diana = language. Test in the home language.",p:"Test kids in the language they understand best.",ex:"Diana was a Spanish speaking student who scored low on an IQ test given in English. Retested in Spanish, her score jumped. She never had an intellectual disability. The problem was the test language."},
+{k:"law",t:"Larry P. v. Riles (1972)",d:"Using standardized IQ tests to place African American students in special ed in California was ruled culturally biased and discriminatory.",tip:"Larry P. = racial bias in IQ testing.",p:"IQ tests can be culturally biased. Using them to place Black students in special ed was discrimination.",ex:"Black students in California were being placed in classes for students with intellectual disabilities at much higher rates, based mostly on IQ scores. The court stopped the practice."},
+{k:"law",t:"Board of Education v. Rowley (1982)",d:"First Supreme Court case to define FAPE. The IEP must be reasonably calculated to give the student educational benefit. Schools do not have to maximize a student's potential.",tip:"Rowley = the floor. “Some” benefit is enough.",p:"The school has to give enough support for the student to benefit. It doesn't have to give the best possible support.",ex:"Amy Rowley was deaf and was passing her classes using a hearing aid and tutoring. Her parents wanted a sign language interpreter. The Court said the school didn't have to provide one because she was already benefiting.",L:"L-fape"},
+{k:"law",t:"Endrew F. v. Douglas County School District (2017)",d:"Raised the FAPE standard. IEPs must be appropriately ambitious and allow meaningful progress in light of the child's circumstances, not just minimal (de minimis) benefit.",tip:"Endrew = Expectations raised. Rowley set the floor, Endrew raised it.",p:"A tiny bit of progress is not enough. Goals must be challenging for that specific child.",ex:"Endrew, a student with autism, had nearly the same IEP goals year after year with almost no progress. The Court said that is not FAPE. The IEP has to aim for real growth.",L:"L-fape"},
+{k:"law",t:"Honig v. Doe (1988)",d:"Supreme Court ruled schools cannot indefinitely remove students with disabilities from their placement, even for serious behavior.",tip:"Honig = you can't kick them out for good. Linked to stay put and discipline rules.",p:"A school can't remove a student with a disability forever because of behavior.",ex:"Two students with emotional disabilities were suspended “indefinitely” for behavior tied to their disabilities. The Court said that broke IDEA's stay put rule.",L:"L-disc"},
+{k:"law",t:"IDEA",d:"Individuals with Disabilities Education Act. The federal special education law. Eligible students ages 3 to 21 get a free appropriate public education through an IEP.",tip:"IDEA = special education + IEP + 13 disability categories. Started as EHA in 1975 (P.L. 94-142).",p:"The law that creates special education. If a student qualifies, they get an IEP and services at no cost.",ex:"A 3rd grader with a reading disability gets daily specialized reading instruction written into her IEP. That is IDEA at work.",L:"L-laws"},
+{k:"law",t:"Section 504",d:"Part of the Rehabilitation Act of 1973. A civil rights law that bans disability discrimination in any program that receives federal money. Students get accommodations through a 504 plan.",tip:"504 = equal access through accommodations. Broader than IDEA.",p:"A civil rights law. It makes sure students with disabilities can access school like everyone else, usually through accommodations.",ex:"A student with anxiety gets a quiet testing room and counselor check ins through a 504 plan. He learns the same curriculum, taught the same way.",L:"L-laws"},
+{k:"law",t:"Americans with Disabilities Act (ADA)",d:"A 1990 civil rights law that removes barriers and promotes equal opportunity for people with disabilities in daily life: jobs, public places, transportation, and services.",tip:"ADA reaches beyond schools, into public AND private settings. It follows the student into adult life.",p:"Civil rights for people with disabilities everywhere: work, stores, buses, buildings.",ex:"Ramps at a restaurant, an interpreter at a job interview, accessible city buses. After graduation, the ADA protects the student at work and in college.",L:"L-laws"},
+{k:"law",t:"IDEA vs. Section 504",d:"IDEA: student must fit one of 13 categories AND need specialized instruction. Gets an IEP. 504: any disability that substantially limits a major life activity. Gets accommodations for equal access.",tip:"Every IDEA student is protected by 504. Not every 504 student qualifies for IDEA.",g:false,p:"IDEA changes HOW the student is taught. 504 removes barriers so the student can access the same teaching.",ex:"Needs a different way of being taught = IDEA. Needs extra time, special seating, or breaks to access regular teaching = 504.",L:"L-laws"},
+{k:"law",t:"Major Life Activities",d:"Things like caring for oneself, seeing, hearing, walking, speaking, breathing, learning, and working. A disability that substantially limits one of these is protected under 504 and the ADA.",tip:"Learning counts as a major life activity.",p:"Everyday things a person does. If a disability makes one of them much harder, the person is protected.",ex:"A student with ADHD is substantially limited in concentrating and learning, so she may qualify for a 504 plan.",L:"L-laws"},
+{k:"law",t:"Reasonable Accommodations",d:"Adjustments that let a person with a disability do a job or access services, like modified schedules, extra time, or assistive devices.",tip:"Accommodations change HOW a student learns or shows learning, not WHAT they learn.",p:"Changes to the setting or the way things are done so a person can take part. The goal stays the same.",ex:"Audiobooks, extended test time, preferential seating, a modified work schedule. A modification would be changing the actual content, like a shorter, easier test.",L:"L-laws"},
+{k:"law",t:"Qualified Individual with a Disability",d:"A person who (1) has a physical or mental impairment that substantially limits a major life activity, (2) has a record of such an impairment, or (3) is regarded as having one.",tip:"Three ways in: has it, had it, or seen as having it.",p:"You are protected if you have a disability, have a history of one, or people treat you like you have one.",ex:"A student who had cancer treatment last year (a record of it), or a student wrongly assumed to have a disability (regarded as), is still protected from discrimination.",L:"L-laws"},
+
+/* Child Find and MTSS */
+{k:"child",t:"Child Find",d:"An IDEA mandate requiring schools to identify, locate, and evaluate ALL children who may have disabilities and need special education.",tip:"Includes private school, homeschooled, homeless, and highly mobile children. Schools must go looking.",p:"Schools must actively look for kids who might need special ed. They can't wait for parents to ask.",ex:"A district runs free developmental screenings for preschoolers and checks in with the local private school about struggling students. That is Child Find."},
+{k:"child",t:"Zero Reject",d:"An IDEA principle: no child with a disability can be denied a public education, no matter how severe the disability.",tip:"Zero = zero kids turned away.",p:"Every child with a disability gets an education. No exceptions.",ex:"A student with severe, multiple disabilities who needs a feeding tube and a full time aide still has the right to a public education.",L:"L-laws"},
+{k:"child",t:"MTSS",d:"Multi-Tiered System of Supports. A school wide framework that gives students increasing levels of support (Tier 1, 2, 3) based on data.",tip:"MTSS can NOT be used to delay or deny a special ed evaluation.",p:"Layers of help. Everyone gets good teaching. Students who need more get more.",ex:"A school screens every student in reading three times a year and moves struggling readers into small groups based on the results."},
+{k:"child",t:"Tier 1 Instruction",d:"High quality core instruction and universal supports given to ALL students in the general education classroom.",tip:"Tier 1 = everyone.",p:"Good teaching for the whole class.",ex:"The whole class gets a research based phonics lesson every morning."},
+{k:"child",t:"Tier 2 Instruction",d:"Targeted interventions, often small group, for students with mild to moderate academic or behavior challenges that Tier 1 alone does not fix.",tip:"Tier 2 = some students, small groups.",p:"Extra help in small groups for some students.",ex:"Five students who scored low on the reading screener meet with the reading teacher 30 minutes, three times a week."},
+{k:"child",t:"Tier 3 Instruction",d:"Intensive, individualized interventions for students who did not respond well enough to Tier 1 and Tier 2.",tip:"Tier 3 = few students, most intense. Often leads to a referral.",p:"The most intense help, often one on one, for students who are still struggling.",ex:"A student who barely moved in Tier 2 now gets daily one on one reading intervention with weekly progress checks."},
+{k:"child",t:"Interventions",d:"Teaching methods and supports used to help struggling students, including strategies, resources, and extra help matched to their needs.",tip:"Document every intervention: what, how often, how long, and results.",p:"Specific extra help aimed at the skill the student is missing.",ex:"A fluency program with timed repeated readings for a student who reads very slowly."},
+{k:"child",t:"Opportunity to Learn (OTL)",d:"Fair access to the resources, instructional time, and supportive environment a student needs to meet standards.",tip:"Before calling it a disability, ask: did this student actually get good instruction?",p:"Did the student get a fair chance to learn? If not, low scores may not mean a disability.",ex:"A student missed half the year because the family kept moving. Low scores may reflect missed teaching, not a disability."},
+{k:"child",t:"Disproportionality",d:"When a racial or ethnic group is overrepresented or underrepresented in special education compared to its share of the school. It signals problems in how students are identified.",tip:"Ties back to Larry P. and Diana.",p:"When one racial or ethnic group shows up in special ed far more, or far less, than it should.",ex:"Black boys are 15% of a school but 45% of students labeled emotional disturbance. That is overrepresentation."},
+{k:"child",t:"Documentation for Referral",d:"Before a special ed referral, the teacher gathers evidence: interventions tried, how long, progress monitoring data, work samples, and parent input.",tip:"Data tells the story. Show the student did not respond to good instruction.",p:"Proof that you tried interventions and tracked what happened.",ex:"A teacher brings 8 weeks of reading intervention data, work samples, and notes from parent conversations to the referral meeting."},
+
+/* Evaluation and eligibility */
+{k:"eval",t:"Multidisciplinary Evaluation Team (MDT)",d:"A team of professionals from different fields who evaluate the student in all areas of suspected disability.",tip:"Multi = many experts, many tools, never one test.",p:"A group of experts who each look at the student from their own area.",ex:"The school psychologist tests thinking skills, the SLP tests language, the teacher shares classroom data, and the parent shares home history."},
+{k:"eval",t:"Related Service Providers",d:"Professionals invited to the MDT based on the student's needs, such as speech, occupational, or physical therapists.",tip:"Who gets invited depends on the student's suspected needs.",p:"Specialists who help the student benefit from special ed.",ex:"Speech therapy, occupational therapy, physical therapy, counseling, and even transportation are related services."},
+{k:"eval",t:"Speech Language Pathologist (SLP)",d:"Specialist who supports children with speech or language disorders and builds intervention plans with teachers and families.",tip:"SLP = talking, articulation, understanding language.",p:"The talking and language expert.",ex:"Works with a student who can't say the “r” sound, or who can't follow two step directions."},
+{k:"eval",t:"Occupational Therapist (OT)",d:"Assesses fine motor skills, sensory processing, and daily living skills.",tip:"OT = small muscles: handwriting, buttons, scissors, sensory.",p:"The small muscles and sensory expert.",ex:"Helps a student hold a pencil correctly, cut with scissors, or cope with a loud cafeteria."},
+{k:"eval",t:"Physical Therapist (PT)",d:"Evaluates gross motor skills and physical functioning to support mobility.",tip:"PT = big muscles: walking, balance, stairs.",p:"The big muscles and movement expert.",ex:"Helps a student with cerebral palsy move safely through hallways and up stairs."},
+{k:"eval",t:"Social Worker or Counselor",d:"Provides information on social, emotional, and environmental factors that may affect behavior and learning.",tip:"Home life, emotions, and environment.",p:"The expert on emotions, family, and what's happening outside school.",ex:"Gathers family history and learns the student recently lost housing, which could explain the drop in grades."},
+{k:"eval",t:"Prior Written Notice (PWN)",d:"A written notice from the school telling parents when it proposes or refuses to start or change a child's identification, evaluation, placement, or FAPE, and explaining their rights.",tip:"Proposes OR refuses = PWN. Even saying “no” requires it.",p:"A written heads up from the school any time it says yes or no to something big about the child's special ed.",ex:"A parent asks for an evaluation and the school says no. The school must send PWN explaining why, what data it used, and the parent's rights.",L:"L-consent"},
+{k:"eval",t:"Informed Consent",d:"Parents are fully informed, in their native language, about a proposed action and agree in writing. Consent is voluntary and can be revoked.",tip:"Consent to evaluate is NOT consent to provide services. Those are separate.",p:"Parents must understand and agree in writing before the school evaluates or starts services.",ex:"The school explains the evaluation in the parent's home language. The parent signs. Later, the parent can change their mind.",L:"L-consent"},
+{k:"eval",t:"Nonbiased Multidisciplinary Evaluation",d:"A fair evaluation required by IDEA. It uses many types of data, is free of racial, cultural, and language bias, and is done by trained professionals.",tip:"No single test can decide eligibility.",p:"A fair testing process: many tools, the right language, trained testers.",ex:"A student who speaks Vietnamese is tested in Vietnamese, observed in class, and assessed with several different tools."},
+{k:"eval",t:"Evaluation Bias",d:"Unfair or prejudiced factors in an evaluation that lead to inaccurate results about a student's abilities and needs.",tip:"Examples: wrong language, culturally loaded test items.",p:"Something unfair in the testing that makes the results wrong.",ex:"A test question asks about snow skiing, something a child growing up in Houston may have never experienced."},
+{k:"eval",t:"Nondiscriminatory Evaluation",d:"An evaluation free of racial, cultural, or other bias so a student's abilities and eligibility are judged fairly.",tip:"The goal that fixes evaluation bias.",p:"Testing that is fair to every student no matter their race, culture, or language.",ex:"Using nonverbal tests, testing in the home language, and combining several data sources."},
+{k:"eval",t:"Exclusionary Factors",d:"Things that can affect school performance but can NOT be the reason a child is found eligible: poverty, trauma, learning English, frequent absences, being unhoused.",tip:"If the problem is mainly caused by one of these, it is not a disability.",p:"Reasons a student might struggle that are NOT a disability.",ex:"A student who just arrived from Honduras and is learning English struggles in reading. The team must rule out language before calling it a learning disability."},
+{k:"eval",t:"Disability / Exceptionality",d:"A condition affecting the body or mind that causes activity limitations and participation restrictions.",tip:"Activity limitation = tasks are harder. Participation restriction = limits on engaging with the world.",p:"A condition that makes certain tasks harder and can limit taking part in everyday life.",ex:"A student with a visual impairment has trouble reading standard print (activity limitation) and joining some sports (participation restriction)."},
+{k:"eval",t:"Eligibility Determination",d:"The team reviews evaluation data to decide if the student qualifies under IDEA and needs special education.",tip:"Two parts: (1) has a disability in one of the 13 categories AND (2) needs special education because of it.",p:"The team decides two things: does the student have a qualifying disability, and do they need special ed?",ex:"Testing shows a reading disability AND the student needs specialized reading instruction. Both are yes, so the student is eligible."},
+{k:"eval",t:"Disability Category",d:"One of the 13 IDEA classifications, such as autism, specific learning disability, or other health impairment.",tip:"A diagnosis alone does not equal eligibility.",p:"The label under IDEA. There are 13.",ex:"Autism, specific learning disability, other health impairment (often ADHD), emotional disturbance, speech or language impairment."},
+{k:"eval",t:"Specific Learning Disability (SLD)",d:"A disorder in basic psychological processes used to understand or use language, which shows up as trouble listening, thinking, speaking, reading, writing, spelling, or doing math.",tip:"SLD is the largest IDEA category. Think dyslexia, dyscalculia.",p:"A brain based learning problem in reading, writing, math, or language, even though the student is otherwise capable.",ex:"A bright student who understands stories read aloud but can't sound out words on the page (dyslexia).",L:"L-sld"},
+{k:"eval",t:"IQ Achievement Discrepancy Model",d:"Compares a student's IQ score to their achievement score. A big gap may point to a learning disability.",tip:"Older model. Criticized as a “wait to fail” approach. IDEA 2004 says states can't require it.",p:"A big gap between how capable the IQ test says you are and how you actually perform.",ex:"IQ is average, but reading scores are far below average. That gap suggests a learning disability.",L:"L-sld"},
+{k:"eval",t:"Convergence of Data",d:"Combining information from many sources (tests, teacher reports, parent input, observations) to get a clear picture of a student's needs.",tip:"Many sources pointing the same way = stronger decision.",p:"Use lots of evidence that points to the same answer.",ex:"Low test scores, teacher reports, intervention data, and parent concerns all show the same reading struggle.",L:"L-sld"},
+{k:"eval",t:"Independent Educational Evaluation (IEE)",d:"An evaluation by a qualified examiner who does NOT work for the district. Parents can request one if they disagree with the school's evaluation.",tip:"At public expense. The school must pay or file for due process to defend its own evaluation.",p:"Parents can get a second opinion from an outside expert, paid for by the school.",ex:"Parents disagree with the school's finding that their son has no disability. They request an IEE from a private psychologist, and the district pays.",L:"L-iee"},
+
+/* FAPE and LRE */
+{k:"fape",t:"Free Appropriate Public Education (FAPE)",d:"An IDEA guarantee that students with disabilities get special education and services tailored to their needs at no cost to parents.",tip:"Free = no cost. Appropriate = fits the student. Not the best possible, but meaningful.",p:"The right special ed, at no cost, that actually helps the child.",ex:"A student's IEP includes specialized reading instruction and speech therapy. The family pays nothing."},
+{k:"fape",t:"Least Restrictive Environment (LRE)",d:"Students with disabilities learn alongside nondisabled peers to the maximum extent appropriate. Removal happens only when general ed with supports cannot work.",tip:"Start in general ed and move out only as needed.",p:"Keep the student with general ed classmates as much as possible.",ex:"Before moving a student to a separate class, the team tries supports in general ed first: an inclusion teacher, a para, and accommodations.",L:"L-lre"},
+{k:"fape",t:"Educational Progress",d:"The improvement a student shows, proving they benefit from the services provided.",tip:"Progress is how you prove FAPE is happening.",p:"Is the student actually getting better?",ex:"A student goes from reading 40 words per minute to 75 words per minute this year."},
+{k:"fape",t:"Specially Designed Instruction",d:"Teaching methods and materials adapted to fit the unique needs of a student with an exceptionality.",tip:"This is what makes it “special” education.",p:"Teaching that is changed to fit the student.",ex:"Teaching reading with a step by step, multisensory program instead of the regular reading curriculum."},
+{k:"fape",t:"Appropriately Ambitious Goals",d:"IEP goals must be challenging and fit the student's circumstances.",tip:"Straight from Endrew F.",p:"Goals that stretch the student but are realistic for them.",ex:"Not “will improve reading,” but “will read 90 words per minute with 95% accuracy by May.”"},
+{k:"fape",t:"Opportunities for Progress",d:"Students must have real chances to meet their challenging goals.",tip:"Endrew F. idea: goals mean nothing without the chance to reach them.",p:"The student needs real chances to work on the goal.",ex:"If the goal is social skills, the student needs time with peers, not just worksheets."},
+{k:"fape",t:"Meaningful Progress",d:"Programs must help students make real, significant progress based on their circumstances, not tiny steps.",tip:"Endrew F. rejected “merely more than de minimis.”",p:"Real growth, not tiny steps.",ex:"Moving up a full reading level this year instead of barely changing."},
+{k:"fape",t:"Denial of FAPE",d:"When a student does not receive the free appropriate public education they are entitled to, causing lost learning.",tip:"Example: IEP services not delivered.",p:"The school didn't give the student what they were owed.",ex:"The IEP says 60 minutes of speech each week, but the speech position sat empty for a whole semester."},
+{k:"fape",t:"Compensatory Education",d:"Extra services given to make up for time lost when FAPE was denied.",tip:"Missed services = make up services.",p:"Make up services.",ex:"The student gets extra speech sessions over the summer to make up for the missed semester."},
+{k:"fape",t:"Private School Tuition Reimbursement",d:"The district pays back private school tuition when it failed to offer FAPE in public school.",tip:"Only when the public school did not offer FAPE.",p:"The school pays back private school costs if it failed the child.",ex:"Endrew's parents moved him to a private school and sought reimbursement because the district's IEP wasn't giving him FAPE."},
+{k:"fape",t:"Continuum of Alternative Placements",d:"The full range of settings from least restrictive (general ed) to most restrictive (special schools, home, hospital).",tip:"Gen ed → resource room → self-contained → day treatment or special school.",p:"A ladder of settings, from most included to most separate.",ex:"A district must have every option available, so the team can pick the one that fits the student, not the one that happens to have space.",L:"L-lre"},
+{k:"fape",t:"Resource Room",d:"A separate room where students get targeted help for part of the day, then return to general ed for the rest.",tip:"Part time pull out.",p:"Part time extra help in another room.",ex:"A student goes to the resource room for 45 minutes of math each day and stays in general ed for everything else.",L:"L-lre"},
+{k:"fape",t:"Self-Contained Classroom",d:"A separate classroom just for students with disabilities, usually with fewer students per teacher.",tip:"More restrictive than a resource room.",p:"A separate special ed class for most of the day.",ex:"A class of 8 students with significant needs, taught by a special ed teacher and two paras.",L:"L-lre"},
+{k:"fape",t:"Day Treatment",d:"A program, usually at a special school, that combines education and therapy during the day.",tip:"Very restrictive. Education plus therapy.",p:"School plus therapy at a separate site.",ex:"A student with severe emotional needs attends a separate center that combines classes with daily therapy.",L:"L-lre"},
+
+/* IEP and disputes */
+{k:"iep",t:"IEP",d:"Individualized Education Program. A legally binding written plan for a student eligible under IDEA, listing present levels, goals, services, and placement.",tip:"Legally binding. Every staff member must follow it.",p:"The legal plan that spells out exactly what the school will do for the student.",ex:"Goals, services, minutes, where services happen, accommodations, and how the student takes state tests."},
+{k:"iep",t:"PLAAFP",d:"Present Levels of Academic Achievement and Functional Performance. Shows what the student can do now and how the disability affects learning.",tip:"The starting point. Goals are built from the PLAAFP.",p:"Where the student is right now, and how the disability affects them in class.",ex:"“Jada reads 45 words per minute. Grade level is 90. Her decoding difficulty makes it hard to finish grade level reading assignments.”"},
+{k:"iep",t:"Annual Measurable Goals",d:"Clear targets for what the student should achieve in a year, covering academics and functional skills, written so progress can be tracked.",tip:"If you can't measure it, it is not a legal goal.",p:"What the student should be able to do in a year, written so you can count it.",ex:"“By May, Jada will read 80 words per minute with 95% accuracy on grade 3 passages.”"},
+{k:"iep",t:"IEP Team",d:"Creates and updates the IEP. Required: parents, a general ed teacher, a special ed teacher, a district representative (LEA), and someone who can interpret evaluation results.",tip:"The student attends when appropriate and must be invited when transition is discussed.",p:"The people who make IEP decisions together, including parents as equal members.",ex:"Mom, the 4th grade teacher, the special ed teacher, the assistant principal, and the school psychologist meet to write the IEP."},
+{k:"iep",t:"Parent Participation",d:"Parents are equal members of the IEP team. Schools must schedule meetings at agreeable times and offer other options like phone or video if needed.",tip:"Predetermining the IEP before the meeting violates parent participation.",p:"Parents are full partners, not visitors.",ex:"The school schedules the meeting around mom's work hours and asks for her input before making decisions."},
+{k:"iep",t:"Procedural Safeguards",d:"Protections for the rights of parents and students, plus ways for families and schools to resolve disputes.",tip:"Schools give parents a copy of the safeguards notice.",p:"Parents' rights in writing, plus ways to settle disagreements.",ex:"The right to see records, get notice, give or refuse consent, request an IEE, and file for mediation or due process.",L:"L-disputes"},
+{k:"iep",t:"Mediation",d:"A neutral mediator helps parents and the school resolve IEP disagreements. Voluntary, free to parents, and confidential.",tip:"Least formal. Both sides must agree to it.",p:"A neutral helper gets both sides talking so they can agree.",ex:"Parents want more speech minutes and the school disagrees. A state provided mediator helps them reach a compromise.",L:"L-disputes"},
+{k:"iep",t:"Complaint Resolution Procedures",d:"Official state complaint process. The state education agency investigates and resolves concerns that special ed laws are not being followed.",tip:"State complaint = the state investigates.",p:"Report to the state that the school broke the law. The state investigates.",ex:"A parent writes to the state education agency saying the school isn't following the IEP. The state investigates and orders a fix.",L:"L-disputes"},
+{k:"iep",t:"Due Process Hearing",d:"A formal, court like hearing in front of an impartial hearing officer to settle disputes about identification, evaluation, placement, or FAPE.",tip:"Most formal. A resolution meeting happens first unless both sides waive it.",p:"A formal hearing, like a mini court, where a hearing officer decides.",ex:"Parents believe the district denied FAPE for two years. Both sides present evidence and witnesses, and the hearing officer rules.",L:"L-disputes"},
+{k:"iep",t:"Stay Put",d:"During a dispute, the student stays in their current educational placement until it is resolved.",tip:"Freeze the placement while the adults work it out.",p:"While the disagreement is being settled, nothing moves.",ex:"The school wants to move a student to a self-contained class. Parents file for due process. The student stays in his current class until it's resolved.",L:"L-disputes"},
+
+/* Discipline and reviews */
+{k:"disc",t:"Manifestation Determination",d:"A review to decide if the behavior was caused by (or directly and substantially related to) the disability, OR was a direct result of the school failing to implement the IEP.",tip:"Required within 10 school days of a decision to change placement for discipline.",p:"Did the disability cause the behavior, or did the school fail to follow the IEP?",ex:"A student with ADHD impulsively throws a chair. The team finds it's tied to his disability. He returns to his placement and gets a behavior plan."},
+{k:"disc",t:"Change in Placement",d:"Removing a student with a disability from their setting for more than 10 school days in a school year (or a pattern of removals).",tip:"10 days is the magic number.",p:"Removed more than 10 school days = a big change with legal protections.",ex:"A student with an IEP is suspended 6 days in October and 5 days in December. That passes 10 days, so protections kick in."},
+{k:"disc",t:"Interim Alternative Educational Setting (IAES)",d:"A temporary placement for students involved in serious incidents like weapons or drugs.",tip:"Up to 45 school days.",p:"A temporary different school setting after a serious incident.",ex:"A student brings a knife to school and is placed at the district's alternative campus for up to 45 school days, still working on IEP goals."},
+{k:"disc",t:"Special Circumstances",d:"Weapons, illegal drugs, or serious bodily injury. The school may move the student to an IAES even if the behavior was a manifestation.",tip:"Weapons, drugs, serious injury = 45 days IAES.",p:"Three serious situations: weapons, drugs, or seriously injuring someone.",ex:"Even if the manifestation team says the behavior was tied to the disability, a student who sold drugs at school can still go to an IAES."},
+{k:"disc",t:"Service Continuum",d:"After 10 days of removal, the school must keep providing services so the student can progress in the curriculum and on IEP goals.",tip:"Services never stop, even with long suspensions.",p:"Even during a long removal, the student keeps getting services.",ex:"On day 11 of a removal, the student gets instruction at the alternative site so he can keep working on his IEP goals."},
+{k:"disc",t:"Progress Monitoring",d:"Regularly collecting data on IEP goals to see if the student is on track, and reporting progress to parents.",tip:"Reported at least as often as general ed report cards.",p:"Checking the data often to see if the plan is working.",ex:"Weekly one minute reading checks, graphed over time and sent home with report cards.",L:"L-cycle"},
+{k:"disc",t:"Annual Review",d:"A yearly IEP meeting to review progress, check if goals were met, and set new goals.",tip:"At least once every 12 months.",p:"The yearly check up on the IEP.",ex:"In May, the team looks at the year's data, celebrates the goals met, and writes new goals for next year.",L:"L-cycle"},
+{k:"disc",t:"Individual Transition Plan (ITP)",d:"Activities to help the student move from high school to adult life, including the shift from IDEA to 504 and ADA protections.",tip:"Postsecondary goals for education or training, employment, and independent living.",p:"The plan for life after high school.",ex:"A 16 year old who wants to be a vet tech gets goals for community college, a job shadow at a clinic, and learning to manage a bank account.",L:"L-cycle"},
+{k:"disc",t:"Three Year Reevaluation",d:"An evaluation at least every 3 years to see if the student still qualifies for special ed under IDEA.",tip:"Can be skipped only if parent and school both agree.",p:"Every 3 years, check if the student still qualifies and what they need now.",ex:"A student identified in 2nd grade is reevaluated in 5th grade. New testing shows he still needs reading support.",L:"L-cycle"},
+
+/* Ethics and CEC */
+{k:"ethics",t:"Council for Exceptional Children (CEC)",d:"The main professional organization for special educators. It sets the ethics code, practice standards, and preparation standards.",tip:"CEC = the professional rulebook for special ed teachers.",p:"The professional organization for special ed teachers.",ex:"Teachers follow the CEC Code of Ethics the way nurses follow a nursing code of ethics."},
+{k:"ethics",t:"Ethical Principles",d:"Basic guidelines special educators follow to act with integrity, competence, and respect for students with exceptionalities.",tip:"Ethics = doing right even when the law is silent.",p:"The rules of right and wrong for special ed teachers.",ex:"Reporting progress honestly, even when the data doesn't look good."},
+{k:"ethics",t:"Professional Competence",d:"Keeping and showing the skills, knowledge, and abilities needed to effectively support students with exceptionalities.",tip:"Being good at the job right now.",p:"Know your stuff and do your job well.",ex:"A teacher learns how to use a student's communication device before the student arrives in her class."},
+{k:"ethics",t:"Professional Growth",d:"Continuous learning to build skills and knowledge in special education.",tip:"Workshops, trainings, coursework = growth.",p:"Keep learning.",ex:"Taking a course on dyslexia interventions, or attending a district training on behavior plans."},
+{k:"ethics",t:"Knowledge Dissemination",d:"Sharing professional knowledge and skills with others to move the field forward.",tip:"Disseminate = spread it. Presenting, mentoring, sharing strategies.",p:"Share what you know.",ex:"Mentoring a new teacher, or presenting a strategy that worked at a staff meeting or conference."},
+{k:"ethics",t:"CEC Standards for Professional Practice",d:"Standards special educators must follow to support all students effectively.",tip:"Ethics = the values. Practice standards = the actions.",p:"What ethical special ed teaching looks like in action.",ex:"Using evidence based practices, protecting confidentiality, and working with families as partners."},
+{k:"ethics",t:"Professional Dispositions",d:"The beliefs, values, virtues, and ethics that shape an educator's character, care, and daily professional habits.",tip:"Dispositions = who you are as a professional, shown through habits.",p:"Your professional attitude and habits.",ex:"Showing up prepared, respecting every family, and believing every student can learn."},
+{k:"ethics",t:"Professional Responsibilities and Ethics",d:"Acting as a model of professional service and integrity in the profession and the community.",tip:"Be the example.",p:"Be a model professional at school and in the community.",ex:"Keeping student information private even outside school, and speaking respectfully about students and families in public."},
+{k:"ethics",t:"CEC Code of Ethics (12 principles, in short)",d:"1. Challenging expectations. 2. Competence and integrity. 3. Inclusive participation. 4. Work well with colleagues. 5. Respectful family partnerships. 6. Use evidence and data. 7. Protect safety. 8. Never do or tolerate harm. 9. Follow and improve laws and policies. 10. Advocate for resources. 11. Join professional organizations. 12. Grow and share knowledge.",tip:"On the test, match the scenario to the principle.",g:false,p:"Open the Ethics lesson in the Learn tab to see what each principle looks like in a real classroom."},
+{k:"ethics",t:"Confidentiality (FERPA)",d:"Student records and information are private. Share only with people who have a legitimate educational need or with parent consent.",tip:"Never discuss a student in public or with other families.",p:"Student information is private.",ex:"You don't talk about a student's diagnosis in the teacher's lounge, with other parents, or online."},
+{k:"ethics",t:"CEC Preparation Standard 1",d:"Engaging in Professional Learning and Practicing within Ethical Guidelines. This is the CEC standard this course is aligned to.",tip:"Standard 1 = ethics and professional learning.",p:"Keep learning and follow the ethics code. That is the standard this whole course is built on."},
+
+/* Numbers */
+{k:"nums",t:"Initial evaluation timeline",d:"60 days after the school receives parent consent (federal rule).",tip:"States can set their own. Texas uses 45 school days. For the WGU test, think 60."},
+{k:"nums",t:"IEP meeting after eligibility",d:"Within 30 days of determining the student is eligible.",tip:"Eval 60, IEP 30."},
+{k:"nums",t:"Annual review",d:"At least once every year.",tip:"1 year."},
+{k:"nums",t:"Reevaluation",d:"At least every 3 years, but not more than once a year unless parent and school agree.",tip:"3 years max, 1 year min."},
+{k:"nums",t:"Disciplinary removal limit",d:"10 school days in a school year. Beyond that, services must continue and it may be a change in placement.",tip:"10 = magic number."},
+{k:"nums",t:"Manifestation determination",d:"Within 10 school days of a decision to change placement for discipline.",tip:"Another 10."},
+{k:"nums",t:"IAES maximum",d:"Up to 45 school days for weapons, illegal drugs, or serious bodily injury.",tip:"45 = serious stuff."},
+{k:"nums",t:"Transition planning starts",d:"No later than the first IEP in effect when the student turns 16.",tip:"Texas starts at 14. Federal law says 16."},
+{k:"nums",t:"IDEA ages covered",d:"Ages 3 through 21 (Part B). Part C covers birth to age 3.",tip:"3 to 21."},
+{k:"nums",t:"IDEA disability categories",d:"13 categories, including autism, SLD, speech or language impairment, other health impairment, and emotional disturbance.",tip:"13 categories."},
+{k:"nums",t:"Dispute filing deadlines",d:"Due process complaint: within 2 years. State complaint: within 1 year of the violation.",tip:"Due process 2, state complaint 1."}
+];
+
+/* ---------- WRITTEN QUESTIONS ---------- */
+const TF=["True","False"];
+const QS = [
+/* law */
+{k:"law",y:"mc",q:"Which case said students must be tested in their primary language?",o:["Diana v. State Board of Education","Larry P. v. Riles","Mills v. Board of Education","PARC v. Pennsylvania"],a:0,w:"Diana = language. Testing in a student's primary language keeps a language barrier from being mistaken for a disability."},
+{k:"law",y:"mc",q:"Which case found that IQ tests used to place African American students in special ed were culturally biased?",o:["Larry P. v. Riles","Diana v. State Board of Education","Honig v. Doe","Brown v. Board of Education"],a:0,w:"Larry P. v. Riles ruled that IQ tests disproportionately labeled Black students in California as intellectually disabled."},
+{k:"law",y:"sc",q:"A district tells a family it cannot afford to serve their child who has emotional disturbance, so the child cannot enroll. Which case says this is not allowed?",o:["Mills v. Board of Education","Rowley","Endrew F.","Diana"],a:0,w:"Mills ruled that children with behavior challenges cannot be excluded and that lack of funds is not an excuse."},
+{k:"law",y:"mc",q:"Which case first opened public education to children with intellectual disabilities?",o:["PARC v. Pennsylvania","Brown v. Board of Education","Honig v. Doe","Endrew F."],a:0,w:"PARC extended equal protection and due process to children with intellectual disabilities."},
+{k:"law",y:"mc",q:"What FAPE standard did Board of Education v. Rowley set?",o:["The IEP must provide some educational benefit","The IEP must maximize the student's potential","The IEP must be appropriately ambitious","The student must perform at grade level"],a:0,w:"Rowley set the floor: an IEP reasonably calculated to provide educational benefit. Schools don't have to maximize potential."},
+{k:"law",y:"mc",q:"What did Endrew F. v. Douglas County add to the FAPE standard?",o:["IEPs must be appropriately ambitious and allow meaningful progress","Schools must provide the best possible education","Students must be placed full time in general ed","Parents choose the placement"],a:0,w:"Endrew F. (2017) said minimal progress isn't enough. Goals must be appropriately ambitious in light of the child's circumstances."},
+{k:"law",y:"tf",q:"True or false: Endrew F. completely threw out the Rowley decision.",o:TF,a:1,w:"False. Endrew F. built on Rowley and raised the bar. Rowley still stands as the first FAPE case."},
+{k:"law",y:"tf",q:"True or false: Brown v. Board of Education was a disability rights case.",o:TF,a:1,w:"False. Brown was about racial segregation, but its equal protection reasoning became the foundation for disability rights cases."},
+{k:"law",y:"mc",q:"Which law requires an IEP?",o:["IDEA","Section 504","ADA","FERPA"],a:0,w:"IEPs come from IDEA. Section 504 uses a 504 plan instead."},
+{k:"law",y:"sc",q:"A student with ADHD earns good grades but needs extra test time and movement breaks. He does not need specialized instruction. What is the best fit?",o:["A 504 plan","An IEP under IDEA","No support, since grades are fine","A self-contained placement"],a:0,w:"He needs accommodations for equal access, not specialized instruction. That is Section 504."},
+{k:"law",y:"tf",q:"True or false: Every student with an IEP is also protected by Section 504.",o:TF,a:0,w:"True. 504 is broader. All IDEA students are covered by 504, but not all 504 students qualify for IDEA."},
+{k:"law",y:"mc",q:"Section 504 applies to:",o:["Any program that receives federal funding","Only private schools","Only students in the 13 IDEA categories","Only students ages 3 to 5"],a:0,w:"504 bans disability discrimination in any program receiving federal financial assistance, which includes public schools."},
+{k:"law",y:"mc",q:"After a student graduates high school, which laws continue to protect them?",o:["Section 504 and the ADA","IDEA only","IDEA and FERPA","None"],a:0,w:"IDEA ends at graduation or age 21. The civil rights protections of 504 and the ADA continue into adult life."},
+{k:"law",y:"mc",q:"Which is NOT one of the three ways to be a qualified individual with a disability?",o:["Currently receiving special education","Has an impairment that substantially limits a major life activity","Has a record of such an impairment","Is regarded as having such an impairment"],a:0,w:"The three prongs are: has it, had it (record), or regarded as having it. Special ed status isn't one of them."},
+{k:"law",y:"mc",q:"Which case led to the discipline protections that stop schools from removing students with disabilities indefinitely?",o:["Honig v. Doe","Rowley","PARC","Diana"],a:0,w:"Honig v. Doe (1988) said schools can't indefinitely remove students with disabilities, even for serious behavior."},
+{k:"law",y:"mc",q:"Which is an example of a reasonable accommodation?",o:["Extended time on a test","Teaching a completely different curriculum","Lowering grade level standards","Removing the student from class"],a:0,w:"Accommodations change HOW a student accesses learning, like extra time. Changing WHAT they learn is a modification."},
+
+/* child */
+{k:"child",y:"mc",q:"Child Find requires schools to:",o:["Identify, locate, and evaluate all children who may have disabilities","Wait for parents to request evaluations","Evaluate only students failing classes","Serve only enrolled public school students"],a:0,w:"Schools must actively look for children who may need special education, including private school and homeless children."},
+{k:"child",y:"tf",q:"True or false: Child Find only applies to students already enrolled in the public school.",o:TF,a:1,w:"False. It also covers private school, homeschooled, homeless, and highly mobile children."},
+{k:"child",y:"mc",q:"Zero reject means:",o:["No child with a disability can be denied a public education, no matter how severe","Schools cannot fail students with IEPs","No student can be suspended","Every student gets an IEP"],a:0,w:"Zero reject = zero kids turned away, regardless of how severe the disability."},
+{k:"child",y:"sc",q:"Students get core reading instruction with the whole class in general education. Which tier is this?",o:["Tier 1","Tier 2","Tier 3","Special education"],a:0,w:"Tier 1 is universal instruction for everyone."},
+{k:"child",y:"sc",q:"A few students who are slightly behind get small group reading help three times a week. Which tier?",o:["Tier 2","Tier 1","Tier 3","Resource room"],a:0,w:"Tier 2 is targeted, often small group, support for mild to moderate needs."},
+{k:"child",y:"sc",q:"A student did not respond to Tier 1 or Tier 2. She now gets daily, intensive, individualized intervention. Which tier?",o:["Tier 3","Tier 2","Tier 1","IEP"],a:0,w:"Tier 3 is the most intensive and individualized level of MTSS."},
+{k:"child",y:"sc",q:"A parent requests a special ed evaluation in writing. The school replies, “We have to finish all MTSS tiers first.” Is this correct?",o:["No. MTSS cannot be used to delay or deny an evaluation","Yes. Tiers must always be completed first","Yes, if the student has good grades","No. The school must place the student immediately"],a:0,w:"MTSS can't delay or deny an evaluation. The school must either seek consent to evaluate or give Prior Written Notice refusing."},
+{k:"child",y:"mc",q:"Before a special ed referral, what documentation matters most?",o:["Interventions tried, how long, and progress monitoring data","The student's discipline record only","A parent's opinion only","The teacher's personal feelings about the student"],a:0,w:"Data shows whether the student responded to quality instruction and interventions."},
+{k:"child",y:"sc",q:"A school notices that Black boys make up 15% of enrollment but 45% of students labeled with emotional disturbance. This is called:",o:["Disproportionality","Zero reject","Child Find","Convergence of data"],a:0,w:"Disproportionality is over or under representation of a group in special education compared to its share of the school."},
+{k:"child",y:"mc",q:"Before deciding a student has a disability, the team checks whether the student had quality instruction, time, and resources. This concept is:",o:["Opportunity to Learn","Zero reject","Stay put","Least Restrictive Environment"],a:0,w:"Opportunity to Learn asks whether the student actually had fair access to good instruction."},
+
+/* eval */
+{k:"eval",y:"tf",q:"True or false: Parent consent to evaluate also counts as consent to start special education services.",o:TF,a:1,w:"False. Consent to evaluate and consent for services are separate. Parents must consent to each."},
+{k:"eval",y:"mc",q:"When must a school give Prior Written Notice?",o:["When it proposes OR refuses to start or change identification, evaluation, placement, or FAPE","Only when parents request it","Only at the annual review","Only when a student is suspended"],a:0,w:"PWN is required for proposals AND refusals. Saying no still requires written notice."},
+{k:"eval",y:"mc",q:"Which statement about informed consent is true?",o:["It is voluntary and can be revoked","Once given, it can never be taken back","It can be verbal only","The school can give it for the parent"],a:0,w:"Consent is voluntary, in writing, in the parent's native language, and can be revoked."},
+{k:"eval",y:"mc",q:"Under federal law, how long does a school have to complete an initial evaluation after consent?",o:["60 days","30 days","90 days","1 year"],a:0,w:"60 days from consent (unless the state sets its own timeline)."},
+{k:"eval",y:"sc",q:"A student recently moved from Mexico, is still learning English, and is struggling in reading. What should the team do?",o:["Evaluate in his primary language and consider language as an exclusionary factor","Use English IQ tests to save time","Place him in special ed right away","Refuse to evaluate until he is fluent"],a:0,w:"Diana v. State Board says test in the primary language. Learning English is an exclusionary factor, not a disability."},
+{k:"eval",y:"mc",q:"Which is an exclusionary factor?",o:["Frequent absences","Dyslexia","Autism","Hearing impairment"],a:0,w:"Exclusionary factors like absences, poverty, trauma, and learning English can't be the basis for eligibility."},
+{k:"eval",y:"mc",q:"A student struggles with handwriting and using scissors. Which provider evaluates this?",o:["Occupational Therapist","Physical Therapist","Speech Language Pathologist","Social Worker"],a:0,w:"OT = fine motor skills, like handwriting and scissors."},
+{k:"eval",y:"mc",q:"A student has trouble walking up stairs and with balance. Which provider evaluates this?",o:["Physical Therapist","Occupational Therapist","School Counselor","Speech Language Pathologist"],a:0,w:"PT = gross motor skills and mobility."},
+{k:"eval",y:"mc",q:"Which provider gives information on home life and emotional factors affecting learning?",o:["Social Worker or Counselor","Physical Therapist","Occupational Therapist","Speech Language Pathologist"],a:0,w:"Social workers and counselors look at social, emotional, and environmental factors."},
+{k:"eval",y:"mc",q:"A student has trouble pronouncing sounds and understanding directions. Which provider evaluates this?",o:["Speech Language Pathologist","Physical Therapist","Occupational Therapist","School Nurse"],a:0,w:"SLPs evaluate speech and language."},
+{k:"eval",y:"tf",q:"True or false: A single test score can be used to decide eligibility.",o:TF,a:1,w:"False. IDEA requires multiple measures. No single assessment can decide eligibility."},
+{k:"eval",y:"mc",q:"To be eligible under IDEA, a student must:",o:["Have a disability in one of the 13 categories AND need special education because of it","Have a medical diagnosis only","Be failing at least two classes","Have a parent request services"],a:0,w:"Eligibility has two parts. Both must be true."},
+{k:"eval",y:"sc",q:"A student has a diagnosis of autism but is thriving academically and socially with no need for specialized instruction. Is he eligible under IDEA?",o:["Likely not, because he doesn't need special education. He may qualify for 504","Yes, any autism diagnosis means automatic eligibility","Yes, if the parent insists","No, autism is not an IDEA category"],a:0,w:"A diagnosis isn't enough. The second part, needing special education, isn't met."},
+{k:"eval",y:"mc",q:"The IQ achievement discrepancy model compares:",o:["A student's IQ score to their achievement score","Two students' test scores","Reading scores to math scores","Grades to attendance"],a:0,w:"A large gap between ability (IQ) and achievement may suggest a learning disability."},
+{k:"eval",y:"mc",q:"Convergence of data means:",o:["Combining several sources of information to make a decision","Using one standardized test","Comparing students to each other","Only using teacher opinion"],a:0,w:"Many sources (tests, observations, parent and teacher input) pointing the same way."},
+{k:"eval",y:"sc",q:"Parents disagree with the school's evaluation results. What right do they have?",o:["Request an Independent Educational Evaluation at public expense","Nothing, the school's decision is final","Only file a lawsuit","Demand a new teacher"],a:0,w:"Parents can request an IEE. The school must pay for it or file for due process to show its evaluation was appropriate."},
+{k:"eval",y:"tf",q:"True or false: An IEE can be done by the district's own school psychologist.",o:TF,a:1,w:"False. An IEE must be done by a qualified examiner who does NOT work for the district."},
+
+/* fape */
+{k:"fape",y:"mc",q:"In FAPE, “free” means:",o:["At no cost to parents","The student gets everything they want","Services are optional","Only basic classes"],a:0,w:"Special education and related services are provided at public expense."},
+{k:"fape",y:"mc",q:"Least Restrictive Environment means:",o:["Educating students with nondisabled peers as much as appropriate","Every student must be in general ed full time","Students with disabilities must be in separate classes","Parents choose any setting"],a:0,w:"Removal from general ed only happens when it can't work, even with supports."},
+{k:"fape",y:"mc",q:"Which order goes from LEAST to MOST restrictive?",o:["General ed, resource room, self-contained, day treatment","Day treatment, self-contained, resource room, general ed","Resource room, general ed, day treatment, self-contained","Self-contained, general ed, resource room, day treatment"],a:0,w:"The continuum starts with general education and moves to more separate settings."},
+{k:"fape",y:"sc",q:"A student spends most of the day in general ed and goes to another room for 45 minutes of reading help daily. This setting is a:",o:["Resource room","Self-contained classroom","Day treatment program","Interim alternative setting"],a:0,w:"Resource room = part time pull out with the rest of the day in general ed."},
+{k:"fape",y:"sc",q:"A school failed to provide the speech therapy listed in a student's IEP for 4 months. What remedy fits?",o:["Compensatory education","Private school tuition reimbursement","Stay put","Manifestation determination"],a:0,w:"Compensatory education makes up for services lost when FAPE was denied."},
+{k:"fape",y:"sc",q:"Parents moved their child to a private school because the district failed to offer FAPE. A hearing officer agrees. What remedy might they get?",o:["Private school tuition reimbursement","Compensatory education only","An IEE","Nothing"],a:0,w:"When the district failed to offer FAPE, it may have to reimburse private school tuition."},
+{k:"fape",y:"tf",q:"True or false: Under LRE, every student must be placed full time in general education.",o:TF,a:1,w:"False. LRE means as much as appropriate. A continuum of placements exists for students who need it."},
+{k:"fape",y:"mc",q:"Placement decisions should be based on:",o:["The student's individual needs in the IEP","The disability label","Where there is open space","What is cheapest for the district"],a:0,w:"Placement is individualized. Labels, space, and cost don't decide it."},
+{k:"fape",y:"mc",q:"Specially designed instruction means:",o:["Adapting content, methods, or delivery to fit a student's unique needs","Giving all students the same lesson","Only giving extra time","Removing the student from school"],a:0,w:"It is what makes special education “special.”"},
+
+/* iep */
+{k:"iep",y:"mc",q:"The PLAAFP describes:",o:["What the student can do now and how the disability affects learning","The student's final grades","The parents' goals only","The school's budget"],a:0,w:"Present levels are the starting point. Goals are built from them."},
+{k:"iep",y:"mc",q:"Which person is NOT a required IEP team member?",o:["The school nurse","A general education teacher","A special education teacher","A district representative (LEA)"],a:0,w:"Required: parents, gen ed teacher, special ed teacher, LEA rep, and someone who can interpret evaluations. Others are invited as needed."},
+{k:"iep",y:"sc",q:"A parent can't attend the scheduled IEP meeting because of work. What should the school do?",o:["Reschedule or offer phone or video participation","Hold the meeting without telling the parent","Cancel the IEP","Mail the parent a finished IEP to sign"],a:0,w:"Parents are equal team members. Schools must try to include them and document their attempts."},
+{k:"iep",y:"mc",q:"Which is true about mediation?",o:["It is voluntary and uses a neutral mediator","It is required before every IEP meeting","A judge makes the final decision","Parents must pay for it"],a:0,w:"Mediation is voluntary, free to parents, confidential, and led by a neutral person."},
+{k:"iep",y:"mc",q:"Who handles a state complaint about special ed law violations?",o:["The state education agency","The classroom teacher","The parent's lawyer","The U.S. Supreme Court"],a:0,w:"Complaint resolution procedures are run by the state education agency."},
+{k:"iep",y:"sc",q:"Parents and the district are in a due process dispute about moving their son to a new placement. Where does he attend school until it is resolved?",o:["His current placement (stay put)","The new placement","Home","Wherever the principal decides"],a:0,w:"Stay put keeps the student in the current placement during the dispute."},
+{k:"iep",y:"mc",q:"IEP annual goals must be:",o:["Measurable","Easy to reach","The same as grade level standards","Written by parents only"],a:0,w:"Goals must be measurable so progress can be tracked."},
+{k:"iep",y:"tf",q:"True or false: The IEP is a legally binding document that all staff working with the student must follow.",o:TF,a:0,w:"True. Gen ed teachers, specials teachers, and paras must all implement it."},
+{k:"iep",y:"mc",q:"Which dispute option is the most formal?",o:["Due process hearing","Mediation","IEP meeting","Parent conference"],a:0,w:"A due process hearing is court like with an impartial hearing officer."},
+
+/* disc */
+{k:"disc",y:"sc",q:"A student with an IEP has already been suspended 8 days this year. The principal wants 5 more days. What is the concern?",o:["It would pass 10 days, which may be a change in placement and requires services and a manifestation determination","No concern, principals can suspend freely","Students with IEPs can never be suspended","The student must be expelled"],a:0,w:"Over 10 school days triggers protections: services continue and a manifestation determination may be needed."},
+{k:"disc",y:"mc",q:"A manifestation determination asks:",o:["Was the behavior caused by the disability, or by the school failing to follow the IEP?","Should the student be expelled?","Does the student need a new teacher?","Did the parents cause the behavior?"],a:0,w:"Two questions: related to the disability, or a direct result of not implementing the IEP."},
+{k:"disc",y:"mc",q:"If the behavior IS a manifestation of the disability, the school generally must:",o:["Return the student to placement and do an FBA and BIP","Expel the student","Suspend for 45 days","End the IEP"],a:0,w:"Return to placement (unless special circumstances or parent agreement), plus a functional behavioral assessment and behavior plan."},
+{k:"disc",y:"sc",q:"A student with an IEP brings a weapon to school. What can the school do?",o:["Place the student in an IAES for up to 45 school days","Expel permanently with no services","Nothing, because of the IEP","Move him to a new school forever"],a:0,w:"Weapons, drugs, and serious bodily injury are special circumstances allowing up to 45 school days in an IAES."},
+{k:"disc",y:"mc",q:"Which is a special circumstance under IDEA discipline rules?",o:["Possessing illegal drugs at school","Talking back to a teacher","Being late to class","Not doing homework"],a:0,w:"Special circumstances: weapons, illegal drugs, or serious bodily injury."},
+{k:"disc",y:"tf",q:"True or false: Once a student is removed for more than 10 days, the school can stop educational services.",o:TF,a:1,w:"False. Services must continue so the student can progress on the curriculum and IEP goals."},
+{k:"disc",y:"mc",q:"Progress monitoring means:",o:["Regularly collecting data on IEP goals and reporting it to parents","Testing once at the end of the year","Watching behavior only","Comparing students to each other"],a:0,w:"Ongoing data on goals, reported at least as often as general ed report cards."},
+{k:"disc",y:"mc",q:"How often must the IEP be reviewed?",o:["At least once a year","Every 3 years","Every month","Only when parents ask"],a:0,w:"The annual review happens at least every 12 months."},
+{k:"disc",y:"mc",q:"Under IDEA, transition planning must begin no later than age:",o:["16","12","18","21"],a:0,w:"Federal law says by the first IEP in effect at 16. Some states, like Texas, start at 14."},
+{k:"disc",y:"mc",q:"An Individual Transition Plan includes goals for:",o:["Education or training, employment, and independent living","Sports and hobbies only","Middle school classes","Driving tests only"],a:0,w:"Postsecondary goals cover education or training, employment, and independent living when appropriate."},
+{k:"disc",y:"mc",q:"How often must a student be reevaluated under IDEA?",o:["At least every 3 years","Every year","Every 5 years","Only once"],a:0,w:"Every 3 years, unless the parent and school agree it isn't needed."},
+
+/* ethics */
+{k:"ethics",y:"sc",q:"A special ed teacher attends a workshop on new reading interventions. Which ethical principle is this?",o:["Professional growth","Knowledge dissemination","Zero reject","Stay put"],a:0,w:"Continuous learning to build skills = professional growth."},
+{k:"ethics",y:"sc",q:"A teacher presents her successful behavior strategies to colleagues at a district training. This is:",o:["Knowledge dissemination","Professional competence","Professional dispositions","Child Find"],a:0,w:"Sharing knowledge to advance the field = dissemination."},
+{k:"ethics",y:"sc",q:"You see a colleague using restraint on a student in a harmful way. What does the CEC Code of Ethics require?",o:["Do not tolerate it. Report it","Ignore it to keep the peace","Talk about it with other parents","Wait to see if it happens again"],a:0,w:"CEC principle: neither engage in nor tolerate any practice that harms individuals with exceptionalities."},
+{k:"ethics",y:"sc",q:"A teacher talks about a student's IEP with a friend at a restaurant. What did she violate?",o:["Confidentiality (FERPA and CEC ethics)","Zero reject","LRE","Child Find"],a:0,w:"Student information is private and shared only with those who have a legitimate educational need."},
+{k:"ethics",y:"mc",q:"Professional dispositions are best described as:",o:["The beliefs, values, and character habits that guide an educator","A teacher's certification test scores","The school's discipline policy","A student's behavior plan"],a:0,w:"Dispositions = who you are professionally, shown through your habits."},
+{k:"ethics",y:"sc",q:"A teacher reviews progress monitoring data and research before choosing an intervention. Which CEC principle is this?",o:["Using evidence, data, and research to inform practice","Professional growth","Advocating for resources","Inclusive participation"],a:0,w:"CEC principle 6: use evidence, instructional data, research, and professional knowledge."},
+{k:"ethics",y:"sc",q:"A teacher asks parents about their goals and respects their culture when planning. Which CEC principle is this?",o:["Developing relationships with families based on mutual respect","Professional growth","Knowledge dissemination","Practicing collegially"],a:0,w:"CEC principle 5: respectful family partnerships and involving families in decisions."},
+{k:"ethics",y:"sc",q:"An administrator tells you to write the IEP before the meeting and present it to parents as final. What is the ethical and legal response?",o:["Drafts are fine, but the team and parents must have real input. Predetermining it violates IDEA","Do it, administrators decide","Refuse to attend the meeting","Ask parents to sign without reading"],a:0,w:"Parents are equal members. Predetermination denies meaningful parent participation."},
+{k:"ethics",y:"sc",q:"You notice students aren't getting the related services in their IEPs because of staff shortages. What should you do?",o:["Document it, report it to administration, and advocate for the services","Say nothing since it's not your fault","Tell parents to switch schools","Change the IEPs yourself to remove the services"],a:0,w:"CEC: uphold laws, advocate for resources, and never tolerate practices that harm students."},
+{k:"ethics",y:"sc",q:"A teacher says, “I don't expect much from him because of his disability.” Which CEC principle does this go against?",o:["Maintaining challenging expectations","Knowledge dissemination","Practicing collegially","Joining professional organizations"],a:0,w:"CEC principle 1: maintain challenging expectations for the highest possible outcomes."},
+{k:"ethics",y:"mc",q:"Professional competence means:",o:["Keeping and showing the skills and knowledge needed to support students well","Having the most years of experience","Getting along with everyone","Following the principal's orders"],a:0,w:"Competence = being skilled and knowledgeable enough to do the job well."},
+{k:"ethics",y:"mc",q:"What is the Council for Exceptional Children (CEC)?",o:["The main professional organization for special educators","A federal law","A court case","A type of IEP"],a:0,w:"CEC sets the ethics code and professional standards for special education."},
+{k:"ethics",y:"sc",q:"A special ed teacher joins CEC and serves on a state committee to improve the field. Which principle is this?",o:["Improving the profession through active participation in professional organizations","Professional dispositions","Zero reject","Inclusive participation"],a:0,w:"CEC principle 11: engage in improving the profession through professional organizations."},
+
+/* application (Section 3) */
+{k:"iep",y:"sc",q:"A general ed teacher refuses to give a student the extended time listed in his IEP, saying it's unfair to others. What's the right response?",o:["Explain the IEP is legally binding, support the teacher, and involve admin if needed","Agree, since fairness matters","Tell the student to ask for it himself","Remove the accommodation from the IEP"],a:0,w:"The IEP is a legal document. All staff must implement it."},
+{k:"ethics",y:"sc",q:"A parent emails asking for another student's test scores to compare with her child's. What do you do?",o:["Politely decline because student records are confidential","Send them since it's helpful","Send them without names","Ask the other student"],a:0,w:"FERPA and CEC ethics protect student records. Share only with authorized people."},
+{k:"law",y:"sc",q:"A student with diabetes needs to check her blood sugar and eat snacks in class. She doesn't need specialized instruction. What fits?",o:["A 504 plan with accommodations","An IEP","Nothing, it's a medical issue","A self-contained classroom"],a:0,w:"Diabetes can substantially limit a major life activity. Accommodations for access = 504."}
+];
+
+const TOPIC_LESSON={law:"L-cases",child:"L-mtss",eval:"L-eval",fape:"L-fape",iep:"L-iep",disc:"L-disc",ethics:"L-ethics",nums:"L-nums"};
+function lessonName(id){ const el=document.querySelector("#"+id+" summary b"); return el?el.textContent:"the lesson"; }
+function openLesson(id){
+  const el=document.getElementById(id); if(!el) return;
+  if(el.dataset.k!=="all" && topic!=="all" && el.dataset.k!==topic){ topic="all"; $("topic").value="all"; buildDeck(); filterLessons(); }
+  switchView("learn"); el.open=true;
+  setTimeout(()=>{ el.scrollIntoView({behavior:"smooth",block:"start"}); el.classList.remove("hl"); void el.offsetWidth; el.classList.add("hl"); },60);
+}
+function filterLessons(){
+  document.querySelectorAll(".lesson").forEach(l=>{ l.style.display=(topic==="all"||l.dataset.k==="all"||l.dataset.k===topic)?"":"none"; });
+}
+
+/* ---------- STATE ---------- */
+const $ = id => document.getElementById(id);
+let topic = "all";
+let deck = [], ci = 0;
+let round = [], qi = 0, score = 0, roundMissed = [];
+let answered = false;
+
+const store = {
+  get(){ try { return JSON.parse(localStorage.getItem("spedMissed")||"[]"); } catch(e){ return memMissed; } },
+  set(v){ memMissed = v; try { localStorage.setItem("spedMissed", JSON.stringify(v)); } catch(e){} }
+};
+let memMissed = [];
+let missed = store.get();
+
+/* topic select */
+Object.entries(TOPICS).forEach(([k,v])=>{
+  const o=document.createElement("option"); o.value=k; o.textContent=v; $("topic").appendChild(o);
+});
+$("topic").onchange = e => { topic = e.target.value; buildDeck(); filterLessons(); showStartIfIdle(); };
+
+function shuffle(a){ a=[...a]; for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+const inTopic = x => topic==="all" || x.k===topic;
+
+/* ---------- FLASHCARDS ---------- */
+function buildDeck(sh){ deck = CARDS.filter(inTopic); if(sh) deck = shuffle(deck); ci = 0; showCard(); }
+function showCard(){
+  const c = deck[ci]; $("flip").classList.remove("flipped");
+  setTimeout(()=>{
+    $("cTerm").textContent=c.t; $("cTerm2").textContent=c.t; $("cDef").textContent=c.d;
+    $("cTip").innerHTML = c.tip ? "<b>Remember:</b> "+c.tip : ""; $("cTip").style.display=c.tip?"block":"none";
+    const m=$("cMore"); m.innerHTML=""; m.classList.remove("on"); $("moreBtn").textContent="Explain it more ▾";
+    const add=(label,txt)=>{ if(!txt) return; const d=document.createElement("div"); d.className="blk"; const b=document.createElement("b"); b.textContent=label; d.append(b, document.createTextNode(txt)); m.appendChild(d); };
+    add("In plain words", c.p); add("Example", c.ex);
+    const lid=c.L||TOPIC_LESSON[c.k]; const lb=document.createElement("button"); lb.className="lesson-link"; lb.textContent="Open lesson: "+lessonName(lid);
+    lb.onclick=e=>{ e.stopPropagation(); openLesson(lid); }; m.appendChild(lb);
+  }, 120);
+  $("cCount").textContent = (ci+1)+" / "+deck.length;
+  $("cTopic").textContent = TOPICS[c.k];
+  $("prevBtn").disabled = ci===0;
+}
+const flip = ()=> $("flip").classList.toggle("flipped");
+const nextCard = ()=>{ if(ci<deck.length-1){ci++;showCard();} else { ci=0; showCard(); } };
+const prevCard = ()=>{ if(ci>0){ci--;showCard();} };
+$("flip").onclick=e=>{ if(e.target.closest(".more")||e.target.id==="moreBtn") return; flip(); };
+$("moreBtn").onclick=e=>{ e.stopPropagation(); const on=$("cMore").classList.toggle("on"); $("moreBtn").textContent= on?"Hide ▴":"Explain it more ▾"; }; $("flipBtn").onclick=flip; $("nextCard").onclick=nextCard; $("prevBtn").onclick=prevCard;
+$("shuffleBtn").onclick=()=>buildDeck(true);
+
+/* ---------- QUIZ ---------- */
+function genFromCard(c, idx){
+  const pool = CARDS.filter(x=>x!==c && x.g!==false && x.k!=="nums");
+  const same = shuffle(pool.filter(x=>x.k===c.k)), other = shuffle(pool.filter(x=>x.k!==c.k));
+  const wrong = [...same, ...other].slice(0,3).map(x=>x.t);
+  return {id:"g"+idx, k:c.k, y:"vocab", q:"Which term matches this definition?", ctx:c.d, o:[c.t,...wrong], a:0, w:c.t+": "+c.d+(c.tip?" "+c.tip:"")};
+}
+const ALLQ = QS.map((q,i)=>({...q,id:"q"+i}));
+function cardQs(){ return CARDS.map((c,i)=>({c,i})).filter(({c})=>c.g!==false && c.k!=="nums"); }
+function qById(id){
+  if(id[0]==="q") return ALLQ[+id.slice(1)];
+  const i=+id.slice(1); return CARDS[i] ? genFromCard(CARDS[i], i) : null;
+}
+function prep(q){
+  if(q.y==="tf") return {...q, opts:q.o.map((t,i)=>({t,ok:i===q.a}))};
+  return {...q, opts:shuffle(q.o.map((t,i)=>({t,ok:i===q.a})))};
+}
+function startRound(missedOnly){
+  let qs;
+  if(missedOnly){
+    qs = shuffle(missed.map(qById).filter(Boolean)).slice(0,20);
+    if(!qs.length){ alert("No missed questions yet. Nice work!"); return; }
+  } else {
+    const written = shuffle(ALLQ.filter(inTopic));
+    const vocab = shuffle(cardQs().filter(({c})=>inTopic(c))).map(({c,i})=>genFromCard(c,i));
+    let nW = Math.min(written.length, 14), nV = Math.min(vocab.length, 20-nW);
+    nW = Math.min(written.length, 20-nV);
+    qs = shuffle([...written.slice(0,nW), ...vocab.slice(0,nV)]);
+  }
+  round = qs.map(prep); qi=0; score=0; roundMissed=[];
+  switchView("quiz");
+  $("qStart").style.display="none"; $("qEnd").style.display="none"; $("qRun").style.display="block";
+  showQ();
+}
+const TYPES = {mc:"Multiple choice", tf:"True or false", sc:"Scenario", vocab:"Vocab"};
+function showQ(){
+  answered=false;
+  const q=round[qi];
+  $("progBar").style.width = (qi/round.length*100)+"%";
+  $("qNum").textContent = "Question "+(qi+1)+" of "+round.length;
+  $("qType").textContent = TYPES[q.y];
+  $("qText").textContent = q.q;
+  $("qCtx").style.display = q.ctx ? "block":"none"; $("qCtx").textContent = q.ctx||"";
+  const box=$("qOpts"); box.innerHTML="";
+  q.opts.forEach((o,i)=>{
+    const b=document.createElement("button"); b.className="opt";
+    b.innerHTML='<span class="l">'+"ABCD"[i]+'</span><span></span>'; b.lastChild.textContent=o.t;
+    b.onclick=()=>answer(i); box.appendChild(b);
+  });
+  $("qWhy").className="why"; $("nextBtn").style.display="none";
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+function answer(i){
+  if(answered) return; answered=true;
+  const q=round[qi], btns=[...$("qOpts").children];
+  btns.forEach((b,j)=>{ b.disabled=true; if(q.opts[j].ok) b.classList.add("right"); });
+  const ok=q.opts[i].ok;
+  if(ok){ score++; missed=missed.filter(x=>x!==q.id); }
+  else { btns[i].classList.add("wrong"); if(!missed.includes(q.id)) missed.push(q.id); roundMissed.push(q); }
+  store.set(missed); updateBadge();
+  const correct=q.opts.find(o=>o.ok).t;
+  $("qWhy").className="why "+(ok?"ok":"no");
+  $("qWhy").innerHTML='<span class="v">'+(ok?"Yes! Correct.":"Not quite. Answer: ")+'</span>';
+  if(!ok) $("qWhy").firstChild.textContent += correct;
+  $("qWhy").appendChild(document.createTextNode(q.w));
+  const lid=TOPIC_LESSON[q.k]; const lb=document.createElement("button"); lb.className="lesson-link"; lb.textContent="Learn more: "+lessonName(lid); lb.onclick=()=>openLesson(lid); $("qWhy").appendChild(lb);
+  $("nextBtn").textContent = qi<round.length-1 ? "Next question" : "See my score";
+  $("nextBtn").style.display="block";
+}
+function nextQ(){ if(qi<round.length-1){qi++;showQ();} else endRound(); }
+$("nextBtn").onclick=nextQ;
+function endRound(){
+  $("qRun").style.display="none"; $("qEnd").style.display="block";
+  const pct=Math.round(score/round.length*100);
+  $("endScore").textContent=pct+"%";
+  $("endTitle").textContent = pct>=85?"You're ready, girl!":pct>=70?"So close. Keep going!":"Good practice. Let's review.";
+  $("endMsg").textContent = score+" out of "+round.length+" correct."+(roundMissed.length?" Review what you missed below.":" Perfect round!");
+  const list=$("endReview"); list.innerHTML="";
+  roundMissed.forEach(q=>list.appendChild(reviewItem(q)));
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+function reviewItem(q){
+  const d=document.createElement("div"); d.className="ri";
+  const b=document.createElement("b"); b.textContent=q.q+(q.ctx?" "+q.ctx:"");
+  const a=document.createElement("div"); a.className="ans"; a.textContent="Answer: "+q.o[q.a];
+  const w=document.createElement("div"); w.textContent=q.w;
+  d.append(b,a,w); return d;
+}
+$("startBtn").onclick=()=>startRound(false);
+$("againBtn").onclick=()=>startRound(false);
+$("startMissed").onclick=()=>startRound(true);
+$("endMissed").onclick=()=>startRound(true);
+function showStartIfIdle(){
+  if($("qRun").style.display!=="block"){ $("qEnd").style.display="none"; $("qStart").style.display="block"; }
+}
+
+/* ---------- MISSED ---------- */
+function updateBadge(){ $("missedBadge").textContent=missed.length; }
+function renderMissed(){
+  const list=$("missedList"); list.innerHTML="";
+  if(!missed.length){ list.innerHTML='<div class="empty">Nothing here yet. 🌿</div>'; return; }
+  missed.map(qById).filter(Boolean).forEach(q=>list.appendChild(reviewItem(q)));
+}
+$("missedGo").onclick=()=>startRound(true);
+$("missedClear").onclick=()=>{ if(confirm("Clear all missed questions?")){ missed=[]; store.set(missed); updateBadge(); renderMissed(); } };
+
+/* ---------- TABS ---------- */
+function switchView(v){
+  document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("on",t.dataset.v===v));
+  document.querySelectorAll(".view").forEach(s=>s.classList.toggle("on",s.id==="v-"+v));
+  $("topic").parentElement.style.display = v==="missed" ? "none" : "block";
+  if(v==="missed") renderMissed();
+}
+document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>switchView(t.dataset.v));
+
+/* ---------- KEYBOARD ---------- */
+document.addEventListener("keydown",e=>{
+  if(e.target.tagName==="SELECT") return;
+  if($("v-cards").classList.contains("on")){
+    if(e.code==="Space"){e.preventDefault();flip();}
+    if(e.key==="ArrowRight")nextCard();
+    if(e.key==="ArrowLeft")prevCard();
+  } else if($("v-quiz").classList.contains("on") && $("qRun").style.display==="block"){
+    const n=parseInt(e.key);
+    if(n>=1&&n<=4&&!answered&&round[qi].opts[n-1]) answer(n-1);
+    if(e.key==="Enter"&&answered) nextQ();
+  }
+});
+
+buildDeck(); filterLessons(); updateBadge();
+</script>
+</body>
+</html>

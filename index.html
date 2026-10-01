@@ -116,12 +116,12 @@ footer{text-align:center;color:var(--muted);font-size:.8rem;margin-top:30px}
 .learn-intro{color:var(--muted);text-align:center;margin-bottom:12px;font-size:.95rem}
 .lesson{background:#fff;border:2px solid var(--pink-line);border-radius:20px;margin-bottom:10px;box-shadow:var(--shadow);overflow:hidden}
 .lesson[open]{border-color:var(--pink)}
-.lesson summary{list-style:none;cursor:pointer;display:flex;gap:12px;align-items:center;padding:14px 16px}
-.lesson summary::-webkit-details-marker{display:none}
-.lesson summary::after{content:"+";margin-left:auto;font-weight:800;font-size:1.4rem;color:var(--pink)}
-.lesson[open] summary::after{content:"−"}
-.lesson summary b{display:block;line-height:1.3}
-.lesson summary small{display:block;color:var(--muted);font-size:.85rem}
+.lesson>summary{list-style:none;cursor:pointer;display:flex;gap:12px;align-items:center;padding:14px 16px}
+.lesson>summary::-webkit-details-marker{display:none}
+.lesson>summary::after{content:"+";margin-left:auto;font-weight:800;font-size:1.4rem;color:var(--pink)}
+.lesson[open]>summary::after{content:"−"}
+.lesson>summary b{display:block;line-height:1.3}
+.lesson>summary small{display:block;color:var(--muted);font-size:.85rem}
 .ln{flex:none;width:34px;height:34px;border-radius:50%;background:var(--green-soft);color:var(--green-deep);font-weight:800;display:grid;place-items:center;font-size:.9rem}
 #L-start .ln,#L-apply .ln{background:var(--pink);color:#fff}
 .lb{padding:4px 16px 18px;border-top:2px dashed var(--pink-line)}
@@ -245,6 +245,38 @@ ul.check li::before{content:"✓";position:absolute;left:0;top:0;width:20px;heig
   .nums{grid-template-columns:repeat(3,1fr)}
   .acro{grid-template-columns:repeat(4,1fr)}
 }
+
+/* read aloud */
+.voice-btn{margin-top:8px;font:inherit;font-weight:800;font-size:.85rem;background:#fff;color:var(--green-deep);border:2px solid var(--green-line);border-radius:999px;padding:6px 14px;cursor:pointer}
+.speak-btn{font:inherit;font-weight:800;font-size:.85rem;background:var(--green-soft);color:var(--green-deep);border:2px solid var(--green-line);border-radius:999px;padding:6px 14px;cursor:pointer;margin:12px 0 0}
+.lb>.speak-btn{margin-top:14px}
+#selRead{white-space:nowrap;position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:50;display:none;font:inherit;font-weight:800;background:var(--green);color:#fff;border:0;border-radius:999px;padding:13px 22px;box-shadow:0 8px 24px rgba(0,0,0,.2);cursor:pointer}
+#player{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:60;display:none;align-items:center;gap:8px;background:var(--pink-deep);color:#fff;border-radius:999px;padding:8px 10px 8px 18px;box-shadow:0 8px 24px rgba(0,0,0,.25);font-weight:800;font-size:.9rem;white-space:nowrap}
+#player button{font:inherit;font-weight:800;border:0;border-radius:999px;padding:8px 14px;cursor:pointer;background:#fff;color:var(--pink-deep)}
+#voiceModal{position:fixed;inset:0;z-index:70;background:rgba(59,42,50,.45);display:none;align-items:center;justify-content:center;padding:16px}
+#voiceModal.on{display:flex}
+#voiceModal .panel{width:100%;max-width:440px}
+#voiceModal label{display:block;font-weight:800;font-size:.8rem;text-transform:uppercase;letter-spacing:.06em;color:var(--green-deep);margin:14px 0 4px}
+#voiceModal input[type=range]{width:100%;accent-color:var(--pink)}
+#voiceModal .small{font-size:.85rem;color:var(--muted);margin-top:12px}
+
+/* memory tricks */
+.quick{background:linear-gradient(135deg,var(--pink-soft),var(--green-soft));border:2px solid var(--pink-line);border-radius:16px;padding:12px 14px;margin:14px 0;font-size:.97rem}
+.quick>b:first-child{display:block;font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;color:var(--pink-deep);margin-bottom:4px}
+.quick table{width:100%;border-collapse:collapse;font-size:.88rem;margin-top:4px}
+.quick td{padding:6px 4px;border-bottom:1px solid rgba(184,52,106,.15);vertical-align:top}
+.quick td:first-child{font-weight:800;white-space:nowrap}
+.quick td:nth-child(2){color:var(--pink-deep);font-weight:700}
+details.more-d{margin-top:12px;border:2px dashed var(--green-line);border-radius:14px;padding:4px 12px}
+details.more-d>summary{list-style:none;cursor:pointer;font-weight:800;color:var(--green-deep);padding:8px 0}
+.hooks{margin-top:12px;background:#fff7e8;border:2px solid #f5d9a8;border-radius:12px;padding:10px 12px}
+.hooks>b{display:block;color:#a8661b;font-size:.8rem;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+.hk{display:flex;flex-direction:column;gap:7px}
+.hk div{font-size:.94rem;line-height:1.4}
+.hk span{display:inline-block;background:#f5d9a8;color:#7a4510;font-weight:800;font-size:.72rem;border-radius:999px;padding:1px 8px;margin-right:6px;vertical-align:1px}
+.trick-sec h5{margin-top:16px}
+.trick-row{padding:8px 0;border-bottom:1px solid var(--pink-line);font-size:.93rem}
+.trick-row b{display:block}
 </style>
 </head>
 <body>
@@ -252,6 +284,7 @@ ul.check li::before{content:"✓";position:absolute;left:0;top:0;width:20px;heig
   <header>
     <h1>SPED Law <em>Study</em></h1>
     <p>Special Education Law, Policies, and Procedures</p>
+    <button class="voice-btn" id="voiceOpen">🔊 Read aloud settings</button>
   </header>
 
   <nav class="tabs">
@@ -274,6 +307,7 @@ ul.check li::before{content:"✓";position:absolute;left:0;top:0;width:20px;heig
     <details class="lesson" id="L-start" data-k="all">
       <summary><span class="ln">★</span><span><b>Start here: the special ed process, step by step</b><small>The whole journey on one page</small></span></summary>
       <div class="lb">
+        <div class="quick"><b>⚡ 30 second version</b>Find → Help (MTSS) → Refer → Notice + Consent → Test <b>(60 days)</b> → Qualify? → IEP <b>(30 days)</b> → Serve and monitor → Review <b>every year</b> → Retest <b>every 3 years</b> → Transition <b>by 16</b>.</div>
         <p>Almost every test question fits somewhere on this path. When you read a scenario, ask yourself: <b>what step are we on?</b></p>
         <ol class="flow">
           <li><b>Child Find</b><span>The school actively looks for kids who might need help.</span></li>
@@ -293,10 +327,28 @@ ul.check li::before{content:"✓";position:absolute;left:0;top:0;width:20px;heig
       </div>
     </details>
 
+    <!-- TRICKS -->
+    <details class="lesson" id="L-tricks" data-k="all">
+      <summary><span class="ln">💡</span><span><b>Memory tricks for every term</b><small>Fast review: one trick per term</small></span></summary>
+      <div class="lb"><p>One trick per term for quick review. Flip a flashcard to see 2 or 3 tricks for each one.</p><div id="tricksBody"></div></div>
+    </details>
+
     <!-- COURT CASES -->
     <details class="lesson" id="L-cases" data-k="law">
       <summary><span class="ln">1</span><span><b>Court cases and laws timeline</b><small>Who, when, and why it matters</small></span></summary>
       <div class="lb">
+        <div class="quick"><b>⚡ 30 second version</b>
+          <table>
+            <tr><td>Brown</td><td>Brown = skin color</td><td>Ended school segregation. The foundation.</td></tr>
+            <tr><td>PARC</td><td>Park and walk in</td><td>Intellectual disabilities get into school.</td></tr>
+            <tr><td>Mills</td><td>MILLions, no excuse</td><td>Behavior needs get in. Money is no excuse.</td></tr>
+            <tr><td>Diana</td><td>DIAna = DIAlect</td><td>Test in the home language.</td></tr>
+            <tr><td>Larry P.</td><td>Larry P. = Black students</td><td>Biased IQ tests are discrimination.</td></tr>
+            <tr><td>Rowley</td><td>LOW-ley, the floor</td><td>FAPE = some benefit, not the best.</td></tr>
+            <tr><td>Endrew F.</td><td>ENDed “just enough”</td><td>Goals must be ambitious.</td></tr>
+            <tr><td>Honig</td><td>“Hold on!”</td><td>Can't remove a student forever for behavior.</td></tr>
+          </table>
+        </div>
         <p>Don't memorize these as a list. Learn them in <b>4 groups</b> by the problem each one solved:</p>
         <div class="groups">
           <div><b>Getting in the door</b>Brown, PARC, Mills</div>
@@ -304,6 +356,7 @@ ul.check li::before{content:"✓";position:absolute;left:0;top:0;width:20px;heig
           <div><b>How good must it be?</b>Rowley, Endrew F.</div>
           <div><b>Discipline</b>Honig v. Doe</div>
         </div>
+        <details class="more-d"><summary>See the full timeline with dates ▾</summary>
         <ul class="timeline">
           <li><span class="yr">1954</span><b>Brown v. Board of Education</b>Ended racial segregation in schools. Not a disability case, but it set the idea that separate is not equal.<i>Hook: the foundation everything else builds on.</i></li>
           <li><span class="yr">1970</span><b>Diana v. State Board of Education</b>A Spanish speaking student was labeled with an intellectual disability after an English IQ test. Students must be tested in their primary language.<i>Hook: Diana = language.</i></li>
@@ -318,6 +371,7 @@ ul.check li::before{content:"✓";position:absolute;left:0;top:0;width:20px;heig
           <li class="law"><span class="yr">2004</span><b>IDEA reauthorized</b>States can't require the IQ discrepancy model for learning disabilities and must allow RTI (response to intervention).</li>
           <li><span class="yr">2017</span><b>Endrew F. v. Douglas County</b>Raised the bar. Goals must be appropriately ambitious, with meaningful progress.<i>Hook: Endrew = Expectations raised.</i></li>
         </ul>
+        </details>
       </div>
     </details>
 
@@ -325,6 +379,7 @@ ul.check li::before{content:"✓";position:absolute;left:0;top:0;width:20px;heig
     <details class="lesson" id="L-laws" data-k="law">
       <summary><span class="ln">2</span><span><b>IDEA vs. Section 504 vs. ADA</b><small>The three laws side by side</small></span></summary>
       <div class="lb">
+        <div class="quick"><b>⚡ 30 second version</b><b>IDEA</b> changes the teaching. IEP, 13 categories, ends at graduation.<br><b>504</b> removes barriers. 504 plan, never ends.<br><b>ADA</b> is 504's big sibling for everywhere in adult life.</div>
         <p><b>The quick test:</b> Does the student need the <b>teaching changed</b>? That's IDEA. Do they just need <b>barriers removed</b> to access the same teaching? That's 504.</p>
         <div class="cmp3">
           <div class="c pk"><h4>IDEA</h4>
@@ -368,6 +423,7 @@ ul.check li::before{content:"✓";position:absolute;left:0;top:0;width:20px;heig
     <details class="lesson" id="L-mtss" data-k="child">
       <summary><span class="ln">3</span><span><b>Child Find and MTSS</b><small>Finding kids and giving help before referral</small></span></summary>
       <div class="lb">
+        <div class="quick"><b>⚡ 30 second version</b>Schools must go FIND kids (hide and seek). Tier 1 = all, Tier 2 = some, Tier 3 = few. MTSS can never delay an evaluation.</div>
         <p><b>Child Find</b> means schools must go looking for kids who might have disabilities. That includes private school, homeschooled, homeless, and highly mobile children, from birth to 21.</p>
         <p><b>MTSS</b> is the system of support the school uses for everyone. Think of it as a pyramid:</p>
         <div class="pyramid">
@@ -396,6 +452,7 @@ ul.check li::before{content:"✓";position:absolute;left:0;top:0;width:20px;heig
     <details class="lesson" id="L-consent" data-k="eval">
       <summary><span class="ln">4</span><span><b>Prior Written Notice vs. Consent</b><small>Who tells, who agrees, and when</small></span></summary>
       <div class="lb">
+        <div class="quick"><b>⚡ 30 second version</b><b>PWN</b> = school tells the parent, yes OR no (Parents Will kNow).<br><b>Consent</b> = parent says yes in writing. Two separate permission slips: one to test, one for services.</div>
         <div class="split">
           <div><b>Prior Written Notice</b>School ➜ Parent. <u>The school informs.</u><br>Required when the school <b>proposes OR refuses</b> to start or change identification, evaluation, placement, or FAPE.<i>Must explain: what, why, what data was used, other options considered, and parent rights.</i></div>
           <div><b>Informed Consent</b>Parent ➜ School. <u>The parent agrees.</u><br>In writing, voluntary, in the parent's native language, and can be taken back.<i>Needed before the initial evaluation, before services start, and before reevaluations.</i></div>
@@ -415,6 +472,7 @@ ul.check li::before{content:"✓";position:absolute;left:0;top:0;width:20px;heig
     <details class="lesson" id="L-eval" data-k="eval">
       <summary><span class="ln">5</span><span><b>Fair evaluation and eligibility</b><small>How the team decides who qualifies</small></span></summary>
       <div class="lb">
+        <div class="quick"><b>⚡ 30 second version</b>Many tools, home language, never one test. Eligible = disability in the 13 + needs special ed (two keys). Don't blame the PLATE: Poverty, Language, Absences, Trauma, Environment.</div>
         <h5>Rules for a fair evaluation</h5>
         <ul class="plain">
           <li>Use a <b>variety</b> of tools. <b>No single test</b> can decide anything.</li>
@@ -453,6 +511,7 @@ ul.check li::before{content:"✓";position:absolute;left:0;top:0;width:20px;heig
     <details class="lesson" id="L-sld" data-k="eval">
       <summary><span class="ln">6</span><span><b>Specific Learning Disability (SLD)</b><small>The 3 ways it gets identified</small></span></summary>
       <div class="lb">
+        <div class="quick"><b>⚡ 30 second version</b>Three ways to spot SLD: a <b>gap</b> (discrepancy), <b>didn't respond to help</b> (RTI), or <b>many sources agree</b> (convergence). States can't force the gap method.</div>
         <p><b>SLD in plain words:</b> a brain based problem with processing language that shows up in reading, writing, spelling, listening, or math, even though the student is otherwise capable. It's the largest IDEA category.</p>
         <div class="cards3">
           <div><b>1. IQ Achievement Discrepancy</b>Compare IQ to achievement. A big gap suggests SLD.<i>Problem: kids have to fall far behind first (“wait to fail”).</i></div>
@@ -467,6 +526,7 @@ ul.check li::before{content:"✓";position:absolute;left:0;top:0;width:20px;heig
     <details class="lesson" id="L-iee" data-k="eval">
       <summary><span class="ln">7</span><span><b>When parents disagree with the evaluation: IEE</b><small>The second opinion right</small></span></summary>
       <div class="lb">
+        <div class="quick"><b>⚡ 30 second version</b>Parent disagrees → school pays for an outside evaluation OR goes to due process to defend its own. The team must consider the results, not obey them.</div>
         <ol class="flow">
           <li><b>Parent disagrees</b><span>with the school's evaluation and asks for an IEE at public expense.</span></li>
           <li><b>School must choose one, without delay:</b><span>Pay for the IEE, OR file for due process to prove its own evaluation was appropriate.</span></li>
@@ -481,6 +541,7 @@ ul.check li::before{content:"✓";position:absolute;left:0;top:0;width:20px;heig
     <details class="lesson" id="L-fape" data-k="fape">
       <summary><span class="ln">8</span><span><b>FAPE: Rowley vs. Endrew F.</b><small>How good does special ed have to be?</small></span></summary>
       <div class="lb">
+        <div class="quick"><b>⚡ 30 second version</b><b>Rowley</b> = LOW-ley, the floor: some benefit. <b>Endrew</b> = ENDed “just enough”: ambitious goals, meaningful progress. Neither one means best possible.</div>
         <div class="acro">
           <div><b>F</b>ree<span>No cost to parents</span></div>
           <div><b>A</b>ppropriate<span>Fits this student</span></div>
@@ -505,6 +566,7 @@ ul.check li::before{content:"✓";position:absolute;left:0;top:0;width:20px;heig
     <details class="lesson" id="L-lre" data-k="fape">
       <summary><span class="ln">9</span><span><b>LRE and the continuum of placements</b><small>Where the student learns</small></span></summary>
       <div class="lb">
+        <div class="quick"><b>⚡ 30 second version</b>Start in gen ed. Add walls only when supports don't work. Placement follows the student's needs, not the label, space, or budget.</div>
         <p><b>LRE in plain words:</b> start in general ed. Only move the student out when general ed doesn't work, even with supports and aids.</p>
         <div class="ladder">
           <div style="--w:100%"><b>General ed full time</b> with accommodations and supports</div>
@@ -530,6 +592,7 @@ ul.check li::before{content:"✓";position:absolute;left:0;top:0;width:20px;heig
     <details class="lesson" id="L-iep" data-k="iep">
       <summary><span class="ln">10</span><span><b>What's in an IEP and who's on the team</b><small>The parts and the people</small></span></summary>
       <div class="lb">
+        <div class="quick"><b>⚡ 30 second version</b>PLAAFP (you are here) → goals (where you're going) → services (how you get there). Five required chairs. Never walk in with a finished IEP.</div>
         <h5>What the IEP must include</h5>
         <ul class="check">
           <li><b>PLAAFP:</b> where the student is now and how the disability affects learning</li>
@@ -560,6 +623,7 @@ ul.check li::before{content:"✓";position:absolute;left:0;top:0;width:20px;heig
     <details class="lesson" id="L-disputes" data-k="iep">
       <summary><span class="ln">11</span><span><b>When parents and schools disagree</b><small>From least formal to most formal</small></span></summary>
       <div class="lb">
+        <div class="quick"><b>⚡ 30 second version</b>Talk → mediate (referee) → state complaint (call the manager) → due process (court) → real court. The student stays put the whole time (freeze tag).</div>
         <div class="scale">
           <div><b>1. Talk it out</b>Call another IEP meeting.</div>
           <div><b>2. Mediation</b>A neutral mediator helps both sides agree. Voluntary, free, confidential.</div>
@@ -577,6 +641,7 @@ ul.check li::before{content:"✓";position:absolute;left:0;top:0;width:20px;heig
     <details class="lesson" id="L-disc" data-k="disc">
       <summary><span class="ln">12</span><span><b>Discipline and the 10 day rule</b><small>The flowchart that answers most discipline questions</small></span></summary>
       <div class="lb">
+        <div class="quick"><b>⚡ 30 second version</b>Up to 10 days, normal rules. Past 10: services keep flowing + MDR within 10 days. Disability caused it = return + behavior plan. Didn't = normal discipline + services. Guns, drugs, blood = up to 45 days (.45 is a gun).</div>
         <p>Background: <b>Honig v. Doe</b> said schools can't remove students with disabilities forever for behavior. These rules came from that.</p>
         <div class="fc">
           <div class="fbox">Student with an IEP breaks the code of conduct</div>
@@ -600,6 +665,7 @@ ul.check li::before{content:"✓";position:absolute;left:0;top:0;width:20px;heig
     <details class="lesson" id="L-cycle" data-k="disc">
       <summary><span class="ln">13</span><span><b>Keeping the IEP current</b><small>Progress, reviews, reevaluations, transition</small></span></summary>
       <div class="lb">
+        <div class="quick"><b>⚡ 30 second version</b>Monitor always (Fitbit). Review every year (birthday). Retest every 3 (tri). Transition by 16 (Sweet 16).</div>
         <div class="cycle">
           <div><b>Progress monitoring</b><em>Ongoing</em>Collect data on goals. Report to parents at least as often as report cards.</div>
           <div><b>Annual review</b><em>Every year</em>Review progress, write new goals, review placement.</div>
@@ -621,6 +687,7 @@ ul.check li::before{content:"✓";position:absolute;left:0;top:0;width:20px;heig
     <details class="lesson" id="L-ethics" data-k="ethics">
       <summary><span class="ln">14</span><span><b>CEC ethics: the 12 principles in real life</b><small>Match the scenario to the principle</small></span></summary>
       <div class="lb">
+        <div class="quick"><b>⚡ 30 second version</b>Match the situation to the principle. CAN do it now = competence. GO learn more = growth. Share it OUT = dissemination. See harm = report it. Parents = partners.</div>
         <p>The test gives a situation and asks which principle applies, or what an ethical teacher should do. Learn what each one <b>looks like</b>.</p>
         <table class="tbl">
           <tr><th>Principle</th><th>Looks like</th></tr>
@@ -705,6 +772,8 @@ ul.check li::before{content:"✓";position:absolute;left:0;top:0;width:20px;heig
           <div class="term-sm" id="cTerm2"></div>
           <div class="def" id="cDef"></div>
           <div class="tip" id="cTip"></div>
+          <div class="hooks" id="cHooks"></div>
+          <button class="speak-btn" id="cSpeak">🔊 Listen</button>
           <button class="more-btn" id="moreBtn">Explain it more ▾</button>
           <div class="more" id="cMore"></div>
         </div>
@@ -737,6 +806,7 @@ ul.check li::before{content:"✓";position:absolute;left:0;top:0;width:20px;heig
       <div class="panel">
         <div class="qtop"><span class="qnum" id="qNum"></span><span class="chip g" id="qType"></span></div>
         <div class="qtext" id="qText"></div>
+        <button class="speak-btn" id="qSpeak" style="margin:0 0 4px">🔊 Listen</button>
         <div class="qctx" id="qCtx" style="display:none"></div>
         <div class="opts" id="qOpts"></div>
         <div class="why" id="qWhy"></div>
@@ -769,6 +839,19 @@ ul.check li::before{content:"✓";position:absolute;left:0;top:0;width:20px;heig
       <div class="reviewlist" id="missedList"></div>
     </div>
   </section>
+
+  <button id="selRead">🔊 Read highlighted</button>
+  <div id="player"><span id="pLabel">Reading…</span><button id="pPause">Pause</button><button id="pStop">Stop</button></div>
+  <div id="voiceModal"><div class="panel">
+    <h2>Read aloud</h2>
+    <p style="margin-bottom:0">Highlight any text and tap <b>Read highlighted</b>, or tap a <b>Listen</b> button on a lesson, card, or question.</p>
+    <label for="vSel">Voice</label>
+    <select id="vSel"></select>
+    <label for="vRate">Speed: <span id="vRateLbl">1.0</span>x</label>
+    <input type="range" id="vRate" min="0.7" max="1.4" step="0.05" value="1">
+    <div class="row" style="margin-top:14px"><button class="btn olg" id="vTest">Test voice</button><button class="btn pk" id="vClose">Done</button></div>
+    <p class="small">Better voices on iPhone: Settings → Accessibility → Spoken Content → Voices → English. Download any voice marked Enhanced or Premium, then pick it here. Downloaded voices work offline.</p>
+  </div></div>
 
   <footer>You've got this. One card at a time. 💗</footer>
 </div>
@@ -904,6 +987,110 @@ const CARDS = [
 {k:"nums",t:"Dispute filing deadlines",d:"Due process complaint: within 2 years. State complaint: within 1 year of the violation.",tip:"Due process 2, state complaint 1."}
 ];
 
+/* ---------- MEMORY TRICKS ---------- */
+const HOOKS = {
+"Brown v. Board of Education (1954)":["Picture it: Brown = skin color. It's the race case, not a disability case.","Story: Brown broke down the wall between Black and white schools. Every disability case after it walked through that same hole in the wall.","Year: 1954 is the oldest one. Brown is the great grandparent of every case on this list."],
+"PARC v. Pennsylvania (1972)":["Sounds like: PARC = PARK. Pull up to the school, park, and walk right in. Kids with intellectual disabilities finally get through the front door.","Letters: The R in PARC stood for the old, outdated word for intellectual disability. R in PARC = intellectual disability case.","Pair it: PARC and Mills are twins from 1972. PARC = intellectual disability gets in. Mills = behavior gets in, and money is no excuse."],
+"Mills v. Board of Education of D.C. (1972)":["Sounds like: Mills = MILLions. “We don't have the millions” is NOT an excuse.","Double M: Mills = Money and Misbehavior. Kids with behavior and emotional needs can't be excluded, and money can't be the reason.","Picture it: A school sign that says “Closed: no budget.” Mills rips it down."],
+"Diana v. State Board of Education (1970)":["Sounds like: DIAna = DIAlect. Test in the language the child actually speaks.","Story: Diana takes an IQ test in English, a language she barely knows, and “fails.” Retested in Spanish, she shines. The test was the problem, not Diana.","Pair it: Diana and Larry P. are the testing twins from California. Diana = language bias. Larry P. = racial bias."],
+"Larry P. v. Riles (1972)":["Your hook: Larry P. sounds like a Black man's name. Larry P. = Black students and biased IQ tests.","Sounds like: Larry P. = Larry's IQ. The IQ test was rigged against Larry.","Pair it: Diana = language. Larry P. = race. Both are about unfair testing that put kids in special ed who didn't belong there."],
+"Board of Education v. Rowley (1982)":["Sounds like: Rowley = LOW-ley. Rowley set the LOW bar, the floor.","Picture it: Amy Rowley is rowing a basic rowboat, and it's moving. The Court said that's enough, so no motorboat (the interpreter) required.","Car version: Rowley says the school owes you a Chevy that runs, not a Cadillac."],
+"Endrew F. v. Douglas County School District (2017)":["Sounds like: ENDrew ENDed “just enough.” No more barely getting by.","Triple E: Endrew = Elevated Expectations. Goals must be appropriately ambitious.","Picture it: Rowley is the ground floor. Endrew pushed the elevator button to go up. Newest case (2017) = highest bar."],
+"Honig v. Doe (1988)":["Sounds like: Honig = “Hold on!” Hold on, you can't put him out forever.","Picture it: A bouncer trying to throw a student out of the club for good. Honig steps in: “He stays put.”","Doe = John Doe = any student with a disability. The protection covers every student, even with serious behavior."],
+"IDEA":["Sounds like: IDEA gives you the IEP. Same first letters, I and E.","Picture it: IDEA is the lightbulb, the big idea of special ed. It brings the categories, the IEP, and the services.","Big three: IDEA = Instruction changes, IEP, and 13 categories."],
+"Section 504":["Rhyme: 504 opens the door. IDEA changes the lesson.","Picture it: Room 504. 504 gets you INTO the room (access). It doesn't change what's taught inside.","Civil rights: 504 came from the Rehabilitation Act, so it's about fair access, not a special curriculum."],
+"Americans with Disabilities Act (ADA)":["Sounds like: ADA = Adults Doing Anything. Jobs, stores, buses, college. It follows them into adulthood.","Picture it: The ramp outside a restaurant. That's the ADA.","Big picture: IDEA stays at school. 504 and ADA follow you out the door after graduation."],
+"IDEA vs. Section 504":["Picture it: IDEA rebuilds the house for you. 504 just adds a ramp so you can get in.","Letters: IDEA = I for Instruction changes. 504 = access and accommodations.","Squares and rectangles: every IDEA student is protected by 504, but not every 504 student is IDEA."],
+"Major Life Activities":["Picture it: Walk through your day. Wake up and get dressed (caring for yourself), see, hear, walk, breathe, learn, work. If a disability jams one of these, you're protected.","Remember: LEARNING is on the list. That's why schools use 504."],
+"Reasonable Accommodations":["Picture it: Hotel accommodations. Same trip, same destination, just a room that works for you.","Accommodate vs. Modify: Accommodate = change HOW you get there. Modify = change WHERE you're going (the content)."],
+"Qualified Individual with a Disability":["Three H's: you HAVE it, you HAD it (a record), or people HEARsay you have it (regarded as having it).","Picture it: Three doors into the same protected room: have it, had it, assumed to have it."],
+"Child Find":["Picture it: Hide and seek. The school is “it” and has to go FIND the kids, even in private schools, shelters, and homes.","Sounds like: Child FIND = the school does the FINDING. It doesn't wait for parents to call."],
+"Zero Reject":["Picture it: A bouncer with ZERO rejections. Everybody gets in, no matter how severe the disability.","Pair it: PARC parked them at the door. Zero Reject is the rule that the door never closes."],
+"MTSS":["Sounds like: MTSS = More Tiers, Stronger Support.","Picture it: A three layer cake. The bottom layer feeds everyone, the middle feeds some, the top feeds a few.","Trap: MTSS is the warm up, not a waiting room. It can't delay an evaluation."],
+"Tier 1 Instruction":["Number trick: Tier 1 = ALL ONE class. Everybody.","Picture it: The whole class at the main table eating the same meal."],
+"Tier 2 Instruction":["Sounds like: Tier 2 = Tier TWO-gether. A small group working together.","Picture it: A small table off to the side with a few kids getting extra help."],
+"Tier 3 Instruction":["Picture it: The VIP section. One on one, most intense support.","Number trick: Tier 3 = the third and final level before a likely referral."],
+"Interventions":["Sounds like: Intervene = step in. Like a coach stepping in to fix one skill.","Remember: An intervention without data didn't happen. Write it down."],
+"Opportunity to Learn (OTL)":["Simple truth: You can't fail a test on a lesson you were never taught.","Ask it like a question: Did this kid get a FAIR SHOT before we call it a disability?"],
+"Disproportionality":["Sounds like: Dis PROPORTION = the portions are off.","Picture it: A pie where one group's slice is way too big for its share of the school."],
+"Documentation for Referral":["Rule: No data, no referral.","Saying: If it isn't written down, it didn't happen."],
+"Multidisciplinary Evaluation Team (MDT)":["Letters: MDT = Many Different Testers.","Picture it: A panel of judges, each scoring a different part of the performance."],
+"Related Service Providers":["Picture it: The cousins of special ed. They help the main plan work.","Remember: Speech, OT, PT, counseling, even the school bus can be a related service."],
+"Speech Language Pathologist (SLP)":["Letters: SLP = Speech, Language, Pronunciation.","Picture it: The mouth and words expert."],
+"Occupational Therapist (OT)":["Sounds like: Occupational = everyday jobs. Writing, buttoning, cutting, eating.","Size trick: OT = small muscles (fingers, hands). PT = big muscles (legs, body)."],
+"Physical Therapist (PT)":["Sounds like: PT = Physical Training, like a gym trainer: walking, balance, stairs.","Size trick: PT = big muscles. OT = small muscles."],
+"Social Worker or Counselor":["Picture it: The home life detective. What's happening outside school that affects learning?"],
+"Prior Written Notice (PWN)":["Letters: PWN = Parents Will kNow. In writing, every time.","Rule: Yes OR no, it goes in writing. Even a refusal needs PWN."],
+"Informed Consent":["Picture it: A permission slip. Every field trip needs its own slip. One slip for the evaluation, a new slip for services.","Remember: Parents can tear up the slip later. Consent can be revoked."],
+"Nonbiased Multidisciplinary Evaluation":["Picture it: Fair pageant judges. Many judges, many categories, no favorites.","Rule: Never one test. One test is one opinion."],
+"Evaluation Bias":["Picture it: Asking a kid from Houston about snow skiing on an IQ test.","Remember: Biased test = wrong results, even if the kid is smart."],
+"Nondiscriminatory Evaluation":["Pair it: Nondiscriminatory = no Diana problems (language) and no Larry P. problems (race).","Remember: This is the fix for evaluation bias."],
+"Exclusionary Factors":["Acronym: Don't put these on the disability PLATE: Poverty, Language, Absences, Trauma, Environment (like being unhoused).","Rule: If PLATE explains the struggle, it's not a disability."],
+"Disability / Exceptionality":["Two parts: Activity = harder to DO the task. Participation = harder to JOIN in.","Picture it: Can't read standard print (activity). Can't join the game (participation)."],
+"Eligibility Determination":["Picture it: A door with TWO locks. Key 1 = a disability in the 13 categories. Key 2 = needs special ed. One key won't open it.","Remember: A diagnosis is only one key."],
+"Disability Category":["Number trick: 13 categories, a baker's dozen.","Picture it: A 13 item menu. You have to order from the menu to get IDEA services."],
+"Specific Learning Disability (SLD)":["Letters: SLD = Smart, but Learning is Difficult in one area.","Picture it: A sharp kid who understands the story when you read it to her but can't read the words herself."],
+"IQ Achievement Discrepancy Model":["Picture it: Two bars on a graph. A tall IQ bar and a short achievement bar. The gap is the discrepancy.","Remember: Called “wait to fail” because the gap has to get big first."],
+"Convergence of Data":["Picture it: Roads meeting at one point. All the data roads lead to the same answer.","Sounds like: Converge = come together."],
+"Independent Educational Evaluation (IEE)":["Picture it: A second opinion from a different doctor. The school pays the bill or goes to court to defend its own test.","Letters: IEE = Independent = not on the district payroll."],
+"Free Appropriate Public Education (FAPE)":["Picture it: A tailored outfit, free of charge. It fits the student. It doesn't have to be designer.","Car version: Chevy, not Cadillac."],
+"Least Restrictive Environment (LRE)":["Picture it: Least restrictive = fewest walls. Start in the big open room, add walls only if needed.","Rule: Gen ed is the starting line, not the prize."],
+"Educational Progress":["Picture it: Receipts. Progress is the proof that services are working."],
+"Specially Designed Instruction":["Picture it: Custom tailoring. Off the rack teaching doesn't fit, so you adjust it."],
+"Appropriately Ambitious Goals":["Motto: Stretch, don't snap. Hard, but realistic for THIS student.","Pair it: This phrase comes straight from Endrew F."],
+"Opportunities for Progress":["Picture it: A swimming goal means nothing if the student never gets in the pool."],
+"Meaningful Progress":["Sounds like: Meaningful = it MEANS something. Leaping, not inching."],
+"Denial of FAPE":["Picture it: The IEP is a promise. Denial of FAPE is a broken promise."],
+"Compensatory Education":["Sounds like: Compensatory = compensation. Payback in services, not money."],
+"Private School Tuition Reimbursement":["Sounds like: Reimburse = refund. The district refunds the private school bill when it dropped the ball."],
+"Continuum of Alternative Placements":["Picture it: A staircase. Main floor = gen ed. Each step down is more separate. Basement = home or hospital."],
+"Resource Room":["Picture it: A pit stop. Pull in for a quick refill, then back on the track (gen ed)."],
+"Self-Contained Classroom":["Sounds like: Self contained = the class contains the student most of the day."],
+"Day Treatment":["Picture it: School and therapy in one building, all day."],
+"IEP":["Picture it: A signed contract. Everybody who works with the student must follow it.","Letters: IEP = Individual Every Person follows it."],
+"PLAAFP":["Picture it: The “You Are Here” dot on a mall map. The goals are the store you're walking to.","Order: PLAAFP first, then goals. You can't plan a trip without knowing where you're starting."],
+"Annual Measurable Goals":["Rule: If you can't count it, you can't track it.","Test it: Could two different teachers measure this goal and get the same answer? Then it's measurable."],
+"IEP Team":["Picture it: Five required chairs at the table: Parent, Gen ed teacher, Sped teacher, the Boss (LEA), and the Test Explainer.","Bonus chair: The student, and they MUST be invited when transition is discussed."],
+"Parent Participation":["Picture it: Parents get a seat AT the table, not a seat in the audience."],
+"Procedural Safeguards":["Picture it: The parents' seatbelt. Rights that protect them during the ride."],
+"Mediation":["Picture it: A referee who can't call fouls. They just help both sides talk it out.","Remember: Voluntary, free, confidential."],
+"Complaint Resolution Procedures":["Picture it: Asking to speak to the manager. The manager is the state."],
+"Due Process Hearing":["Picture it: Court. A judge (hearing officer), witnesses, and evidence.","Number trick: Due rhymes with two. File within 2 years."],
+"Stay Put":["Picture it: Freeze tag. Nobody moves until the dispute is settled."],
+"Manifestation Determination":["Question to remember: “Was it the disability, or was it us?”","Picture it: The team as detectives figuring out WHY the behavior happened."],
+"Change in Placement":["Number trick: 10 school days = 2 school weeks. Out more than 2 weeks = a big deal."],
+"Interim Alternative Educational Setting (IAES)":["Sounds like: Interim = in the meantime. A temporary spot, up to 45 school days."],
+"Special Circumstances":["Three words: Guns, Drugs, Blood (serious bodily injury).","Number trick: A .45 is a gun. Weapons = up to 45 days."],
+"Service Continuum":["Picture it: The education faucet never shuts off, even after day 10."],
+"Progress Monitoring":["Picture it: A Fitbit for IEP goals. Regular check ins on the numbers.","Remember: Report it as often as report cards go home."],
+"Annual Review":["Picture it: The IEP's birthday. Celebrate it once a year."],
+"Individual Transition Plan (ITP)":["Sweet 16: At 16, start planning for adult life.","Letters: ITP = I'm Turning Pro. Training, a job, and living on my own."],
+"Three Year Reevaluation":["Sounds like: Tri = 3. The triennial checkup.","Picture it: An eye exam every 3 years. Do you still need glasses? Is the prescription right?"],
+"Council for Exceptional Children (CEC)":["Picture it: CEC is to special ed teachers what the bar association is to lawyers."],
+"Ethical Principles":["Saying: Ethics = what you do when no one's watching."],
+"Professional Competence":["Sounds like: Competence = CAN do it now."],
+"Professional Growth":["Sounds like: Growth = GO learn more."],
+"Knowledge Dissemination":["Sounds like: Disseminate = DIStribute. Spread it like seeds.","Pair it: Growth = learning IN. Dissemination = sharing OUT."],
+"CEC Standards for Professional Practice":["Picture it: Ethics is the heart. Practice standards are the hands."],
+"Professional Dispositions":["Sounds like: Disposition = your teacher vibe. Attitude plus habits."],
+"Professional Responsibilities and Ethics":["Picture it: Role model in the building AND at the grocery store."],
+"CEC Code of Ethics (12 principles, in short)":["Shortcut: Most ethics answers boil down to: high expectations, include families, use data, keep kids safe, follow the law, speak up."],
+"Confidentiality (FERPA)":["Saying: What happens in the IEP meeting stays in the IEP meeting."],
+"CEC Preparation Standard 1":["Number trick: Standard 1 = first things first. Be ethical and keep learning."],
+"Initial evaluation timeline":["Number trick: 60 days = about 2 months to test."],
+"IEP meeting after eligibility":["Number trick: Eval 60, IEP 30. The plan gets half the time."],
+"Annual review":["Picture it: Once a year, like a birthday."],
+"Reevaluation":["Sounds like: Tri = 3. Triennial."],
+"Disciplinary removal limit":["Number trick: 10 days = 2 school weeks."],
+"Manifestation determination":["Number trick: 10 and 10. More than 10 days out, then 10 days to meet."],
+"IAES maximum":["Number trick: A .45 is a gun. Weapons = 45 days."],
+"Transition planning starts":["Sweet 16: time to plan for adult life."],
+"IDEA ages covered":["Picture it: From preschool to age 21."],
+"IDEA disability categories":["Number trick: A baker's dozen = 13."],
+"Dispute filing deadlines":["Rhyme: Due process, two. State complaint, one."]
+};
+CARDS.forEach(c=>{ if(HOOKS[c.t]) c.m = HOOKS[c.t]; });
+
 /* ---------- WRITTEN QUESTIONS ---------- */
 const TF=["True","False"];
 const QS = [
@@ -1020,7 +1207,17 @@ function openLesson(id){
   switchView("learn"); el.open=true;
   setTimeout(()=>{ el.scrollIntoView({behavior:"smooth",block:"start"}); el.classList.remove("hl"); void el.offsetWidth; el.classList.add("hl"); },60);
 }
+function buildTricks(){
+  const body=document.getElementById("tricksBody"); if(!body) return;
+  Object.keys(TOPICS).filter(k=>k!=="all").forEach(k=>{
+    const sec=document.createElement("div"); sec.className="trick-sec"; sec.dataset.k=k;
+    const h=document.createElement("h5"); h.textContent=TOPICS[k]; sec.appendChild(h);
+    CARDS.filter(c=>c.k===k&&c.m).forEach(c=>{ const r=document.createElement("div"); r.className="trick-row"; const b=document.createElement("b"); b.textContent=c.t; const h0=c.m[0]; const ix=h0.indexOf(":"); r.append(b, document.createTextNode(ix>0&&ix<16?h0.slice(ix+1).trim():h0)); sec.appendChild(r); });
+    body.appendChild(sec);
+  });
+}
 function filterLessons(){
+  document.querySelectorAll(".trick-sec").forEach(x=>{ x.style.display=(topic==="all"||x.dataset.k===topic)?"":"none"; });
   document.querySelectorAll(".lesson").forEach(l=>{ l.style.display=(topic==="all"||l.dataset.k==="all"||l.dataset.k===topic)?"":"none"; });
 }
 
@@ -1054,6 +1251,10 @@ function showCard(){
   setTimeout(()=>{
     $("cTerm").textContent=c.t; $("cTerm2").textContent=c.t; $("cDef").textContent=c.d;
     $("cTip").innerHTML = c.tip ? "<b>Remember:</b> "+c.tip : ""; $("cTip").style.display=c.tip?"block":"none";
+    const hb=$("cHooks"); hb.innerHTML=""; hb.style.display=c.m?"block":"none";
+    if(c.m){ const t=document.createElement("b"); t.textContent="💡 Memory tricks"; const box=document.createElement("div"); box.className="hk";
+      c.m.forEach(h=>{ const d=document.createElement("div"); const ix=h.indexOf(":"); if(ix>0&&ix<16){ const sp=document.createElement("span"); sp.textContent=h.slice(0,ix); d.append(sp, document.createTextNode(h.slice(ix+1).trim())); } else d.textContent=h; box.appendChild(d); });
+      hb.append(t,box); }
     const m=$("cMore"); m.innerHTML=""; m.classList.remove("on"); $("moreBtn").textContent="Explain it more ▾";
     const add=(label,txt)=>{ if(!txt) return; const d=document.createElement("div"); d.className="blk"; const b=document.createElement("b"); b.textContent=label; d.append(b, document.createTextNode(txt)); m.appendChild(d); };
     add("In plain words", c.p); add("Example", c.ex);
@@ -1067,7 +1268,7 @@ function showCard(){
 const flip = ()=> $("flip").classList.toggle("flipped");
 const nextCard = ()=>{ if(ci<deck.length-1){ci++;showCard();} else { ci=0; showCard(); } };
 const prevCard = ()=>{ if(ci>0){ci--;showCard();} };
-$("flip").onclick=e=>{ if(e.target.closest(".more")||e.target.id==="moreBtn") return; flip(); };
+$("flip").onclick=e=>{ if(e.target.closest(".more")||e.target.id==="moreBtn"||e.target.id==="cSpeak") return; flip(); };
 $("moreBtn").onclick=e=>{ e.stopPropagation(); const on=$("cMore").classList.toggle("on"); $("moreBtn").textContent= on?"Hide ▴":"Explain it more ▾"; }; $("flipBtn").onclick=flip; $("nextCard").onclick=nextCard; $("prevBtn").onclick=prevCard;
 $("shuffleBtn").onclick=()=>buildDeck(true);
 
@@ -1200,7 +1401,69 @@ document.addEventListener("keydown",e=>{
   }
 });
 
-buildDeck(); filterLessons(); updateBadge();
+
+/* ---------- READ ALOUD ---------- */
+const TTS = window.speechSynthesis;
+let voices=[], vPick="", vRate=1, ttsQueue=[], paused=false;
+try{ vPick=localStorage.getItem("spedVoice")||""; vRate=parseFloat(localStorage.getItem("spedRate")||"1")||1; }catch(e){}
+function loadVoices(){
+  if(!TTS) return;
+  voices = TTS.getVoices().filter(v=>/^en/i.test(v.lang));
+  const sel=$("vSel"); sel.innerHTML="";
+  const rank=v=>(/premium|enhanced|natural|neural/i.test(v.name)?0:/^en-US/i.test(v.lang)?1:2);
+  voices.sort((a,b)=>rank(a)-rank(b)||a.name.localeCompare(b.name));
+  voices.forEach(v=>{ const o=document.createElement("option"); o.value=v.name; o.textContent=v.name+" ("+v.lang+")"; sel.appendChild(o); });
+  if(!voices.find(v=>v.name===vPick) && voices.length) vPick=voices[0].name;
+  if(!voices.length){ const o=document.createElement("option"); o.value=""; o.textContent="Device default voice"; sel.appendChild(o); }
+  sel.value=vPick;
+}
+if(TTS){ loadVoices(); TTS.onvoiceschanged=loadVoices; }
+$("vSel").onchange=e=>{ vPick=e.target.value; try{localStorage.setItem("spedVoice",vPick);}catch(err){} };
+$("vRate").value=vRate; $("vRateLbl").textContent=vRate.toFixed(2).replace(/0$/,"");
+$("vRate").oninput=e=>{ vRate=parseFloat(e.target.value); $("vRateLbl").textContent=vRate.toFixed(2).replace(/0$/,""); try{localStorage.setItem("spedRate",vRate);}catch(err){} };
+$("voiceOpen").onclick=()=>$("voiceModal").classList.add("on");
+$("vClose").onclick=()=>$("voiceModal").classList.remove("on");
+$("voiceModal").onclick=e=>{ if(e.target.id==="voiceModal") $("voiceModal").classList.remove("on"); };
+$("vTest").onclick=()=>speak("Hi! This is how I'll sound reading your special education law lessons. You've got this.");
+
+function clean(t){ return t.replace(/[➜▾▴▲▼★✓🔊💗🌿]/g," ").replace(/\bvs\.\s/g,"versus ").replace(/\bv\.\s/g,"versus ").replace(/\s+/g," ").trim(); }
+function chunks(t){ return (t.match(/[^.!?]+[.!?]*["”]?/g)||[t]).map(x=>x.trim()).filter(Boolean); }
+function speak(text){
+  if(!TTS){ alert("Read aloud isn't supported in this browser. Try Safari or Chrome."); return; }
+  TTS.cancel(); paused=false; $("pPause").textContent="Pause";
+  ttsQueue = chunks(clean(text));
+  const v = voices.find(x=>x.name===vPick);
+  ttsQueue.forEach((c,i)=>{
+    const u=new SpeechSynthesisUtterance(c); if(v){u.voice=v;u.lang=v.lang;} u.rate=vRate;
+    if(i===ttsQueue.length-1) u.onend=()=>{ $("player").style.display="none"; };
+    TTS.speak(u);
+  });
+  $("selRead").style.display="none"; $("player").style.display="flex";
+}
+$("pPause").onclick=()=>{ if(paused){TTS.resume();paused=false;$("pPause").textContent="Pause";} else {TTS.pause();paused=true;$("pPause").textContent="Resume";} };
+$("pStop").onclick=()=>{ TTS.cancel(); $("player").style.display="none"; };
+
+/* highlighted text */
+let selText="", selTimer=null;
+document.addEventListener("selectionchange",()=>{
+  const t=(window.getSelection()||"").toString().trim();
+  if(t.length>2){ selText=t; clearTimeout(selTimer); if($("player").style.display!=="flex") $("selRead").style.display="block"; }
+  else { clearTimeout(selTimer); selTimer=setTimeout(()=>{ $("selRead").style.display="none"; },700); }
+});
+$("selRead").addEventListener("pointerdown",e=>{ e.preventDefault(); });
+$("selRead").onclick=()=>{ if(selText) speak(selText); };
+
+/* listen buttons */
+document.querySelectorAll(".lesson").forEach(l=>{
+  const lb=l.querySelector(".lb"); const b=document.createElement("button"); b.className="speak-btn"; b.textContent="🔊 Listen to this lesson";
+  b.onclick=()=>{ const title=l.querySelector("summary b").textContent; const body=[...lb.children].filter(x=>x!==b).map(x=>x.innerText).join(". "); speak(title+". "+body); };
+  lb.insertBefore(b, lb.firstChild);
+});
+$("cSpeak").onclick=e=>{ e.stopPropagation(); const c=deck[ci]; speak([c.t, c.d, c.p?("In plain words. "+c.p):"", c.ex?("Example. "+c.ex):"", c.tip?("Remember. "+c.tip):"", c.m?("Memory tricks. "+c.m.join(". ")):""].filter(Boolean).join(". ")); };
+$("qSpeak").onclick=()=>{ const q=round[qi]; let t=q.q+(q.ctx?". "+q.ctx:"")+". "+q.opts.map((o,i)=>"ABCD"[i]+". "+o.t).join(". ");
+  if(answered){ t=$("qWhy").firstChild.textContent+". "+q.w; } speak(t); };
+
+buildTricks(); buildDeck(); filterLessons(); updateBadge();
 </script>
 </body>
 </html>
